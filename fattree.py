@@ -68,24 +68,38 @@ class FatTree:
 
 
     def getServersOfSamePod(self, no):
-        [pod, _tor, _host] = self.parsePos(no)
-        # start1 = self.calcServNo(pod, 0, 0)
-        # end1 = self.calcServNo(pod, tor-1, slef.k//2-1)
-        # start2 = self.calcServNo(pod, tor+1, 0)
-        # end2 = self.calcServNo(pod, self.k//2-1, self.k//2-1)
+        [pod, tor, _host] = self.parsePos(no)
         start = self.calcServNo(pod, 0, 0)
         end = self.calcServNo(pod, self.k//2-1, self.k//2-1)
         servList = {}
         for no in range(start, end+1):
             servList[str(no)] = self.servers[no - self.serverNoMin]
+        # 排除掉sameTor
+        startOmit = self.calcServNo(pod, tor, 0)
+        endOmit = self.calcServNo(pod, tor, self.k//2-1)
+        for no in range(startOmit, endOmit+1):
+            del servList[str(no)]
         return servList
 
 
-    def getServersOfOtherPod(self, no):
-        [pod, tor, _host] = self.parsePos(no)
-        start = self.calcServNo(pod, tor, 0)
-        end = self.calcServNo(pod, tor, self.k//2-1)
-        return self.servers[start-self.serverNoMin:end+1-self.serverNoMin]
+    def getServersOfOtherPod(self, no1, no2):
+        [pod1, _tor1, _host1] = self.parsePos(no1)
+        [pod2, _tor2, _host2] = self.parsePos(no2)
+        start = self.serverNoMin
+        end = self.serverNoMax
+        startOmit1 = self.calcServNo(pod1, 0, 0)
+        startOmit2 = self.calcServNo(pod2, 0, 0)
+        endOmit1 = self.calcServNo(pod1, self.k//2-1, self.k//2-1)
+        endOmit2 = self.calcServNo(pod2, self.k//2-1, self.k//2-1)
+        servList = {}
+        for no in range(start, end+1):
+            servList[str(no)] = self.servers[no - self.serverNoMin]
+        for no in range(startOmit1, endOmit1):
+            del servList[str(no)]
+        for no in range(startOmit2, endOmit2):
+            del servList[str(no)]
+        return servList
+
 
     # 计算服务器编号值
     def calcServNo(self, pod, tor, host):
