@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.7.0/nv.d3.min.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.7.0/nv.d3.min.js"></script>
+    </head>
+    <body>
+        
+    <div id="linechart"><svg style="width:1000px;height:500px;"></svg></div>
+
+
+    <script>
+
+
+
+            data_linechart=[{"values": [{"x": 0, "y": 0}], "key": "Workload", "yAxis": "1"}];
+
+
+        nv.addGraph(function() {
+        var chart = nv.models.lineChart();
+
+        chart.margin({top: 30, right: 60, bottom: 20, left: 60});
+
+        var datum = data_linechart;
+
+
+
+                chart.xAxis
+                .tickFormat(d3.format(',r'));
+            chart.yAxis
+                .tickFormat(d3.format(',.02f'));
+
+
+
+          chart.showLegend(true);
+
+
+    
+
+        
+
+
+
+            d3.select('#linechart svg')
+            .datum(datum)
+            .transition().duration(500)
+            .attr('width', 1000)
+            .attr('height', 500)
+            .call(chart);
+
+
+        });
+
+
+
+    </script>
+
+    </body>
+</html>
