@@ -25,9 +25,7 @@ def def_parser():
     parser.add_argument('-i', '--input', dest='i', help='Demands file (default is requests.txt)',
                         type=str, default='requests.txt')
     parser.add_argument('-l', '--log', dest='l', help='Log file name (default is log.txt)',
-                        type=str, default='log.txt')
-    parser.add_argument('-d', '--draw', dest='d', help='Draw file name (default is index.html)',
-                        type=str, default='index.html')
+                        type=str, default='result.txt')
     parser.add_argument('-n', '--no', dest='n', help='No id in request file',
                         action='store_true')
     return parser
@@ -102,14 +100,11 @@ def svnfp(handle, topo):
         if hop >= 6:
             placeDiffPodDemand(dTrans, topo)
         elif hop >= 4:
-            pass
-            # placeSamePodDemand(dTrans, topo)
+            placeSamePodDemand(dTrans, topo)
         elif hop >= 2:
-            pass
-            # placeSameTorDemand(dTrans, topo)
+            placeSameTorDemand(dTrans, topo)
         else:
-            pass
-            # placeSameSerDemand(dTrans, topo)
+            placeSameSerDemand(dTrans, topo)
         # topo.display()
 
 def chooseBestServ(mips, exp, serversList, topo):
@@ -217,7 +212,243 @@ def placeDiffPodDemand(demand, topo):
             no = placeResultOfd[i]
             mips = mipsList_bak[i]
             topo.deployToServ(dId, mips, exp, int(no))
-    
+
+def placeSamePodDemand(demand, topo):
+    placeResult1Ofd = []
+    placeResult2Ofd = []
+    [dId, src, dst, exp, mipsList] = demand
+    sfcLen = len(mipsList)
+    mipsList_bak = mipsList[:]
+    srcTorServersList = topo.getServersOfSameTor(src)
+    dstTorServersList = topo.getServersOfSameTor(dst)
+    # 1. first & last vnf of d
+    # 首/尾能放到src/dst则放，因为可以是零跳
+    if(len(mipsList) > 0):
+        mips = mipsList.pop(0)
+        if topo.ifCanDeploy(mips, exp, src):
+            placeResult1Ofd.insert(0, src)
+            del srcTorServersList[str(src)]
+        else:
+            mipsList.insert(0, mips)
+    if(len(mipsList) > 0):
+        mips = mipsList.pop(-1)
+        if topo.ifCanDeploy(mips, exp, dst):
+            placeResult2Ofd.append(dst)
+            del dstTorServersList[str(dst)]
+        else:
+            mipsList.append(mips)
+    # 2. sameTor
+    while(len(mipsList) > 0):
+        if len(srcTorServersList) == 0 and len(dstTorServersList) == 0:
+            break
+        if len(srcTorServersList) > 0:
+            mips = mipsList.pop(0)
+            no = chooseBestServ(mips, exp, srcTorServersList, topo)
+            if no != False:
+                placeResult1Ofd.append(int(no))
+                del srcTorServersList[str(no)]
+            else:
+                srcTorServersList = []
+                mipsList.insert(0, mips)
+        if len(dstTorServersList) > 0 and len(mipsList) > 0:
+            mips = mipsList.pop(-1)
+            no = chooseBestServ(mips, exp, dstTorServersList, topo)
+            if no != False:
+                placeResult2Ofd.insert(0, int(no))
+                del dstTorServersList[str(no)]
+            else:
+                dstTorServersList = []
+                mipsList.append(mips)
+    # 3. samePod, choose same/Neighbor Tor!!!
+    srcPodServersList = topo.getServersOfSamePod(src)
+    while(len(mipsList) > 0):
+        if len(srcPodServersList) > 0:
+            mips = mipsList.pop(0)
+            no = chooseBestServ(mips, exp, srcPodServersList, topo)
+            if no != False:
+                placeResult1Ofd.append(int(no))
+                del srcPodServersList[str(no)]
+            else:
+                srcPodServersList = []
+                mipsList.insert(0, mips)
+                break
+    # 4. otherPods 
+    otherServersList = topo.getServersOfOtherPod(src, dst)  # 两个参数在同一个Pod
+    while(len(mipsList) > 0):
+        if len(otherServersList) > 0:
+            mips = mipsList.pop(0)
+            no = chooseBestServ(mips, exp, otherServersList, topo)
+            if no != False:
+                placeResult1Ofd.append(int(no))
+                del otherServersList[str(no)]
+            else:
+                otherServersList = []
+                mipsList.insert(0, mips)
+                break
+    # 5. 总放置结果
+    placeResultOfd = placeResult1Ofd+placeResult2Ofd
+    placeResult.append(str(dId)+DELIM+str(placeResultOfd))
+    if sfcLen == len(placeResultOfd):
+        for i in range(sfcLen):
+            no = placeResultOfd[i]
+            mips = mipsList_bak[i]
+            topo.deployToServ(dId, mips, exp, int(no))
+
+def placeSameTorDemand(demand, topo):
+    placeResult1Ofd = []
+    placeResult2Ofd = []
+    [dId, src, dst, exp, mipsList] = demand
+    sfcLen = len(mipsList)
+    mipsList_bak = mipsList[:]
+    srcTorServersList = topo.getServersOfSameTor(src)
+    # 1. first & last vnf of d
+    # 首/尾能放到src/dst则放，因为可以是零跳
+    if(len(mipsList) > 0):
+        mips = mipsList.pop(0)
+        if topo.ifCanDeploy(mips, exp, src):
+            placeResult1Ofd.insert(0, src)
+            del srcTorServersList[str(src)]
+        else:
+            mipsList.insert(0, mips)
+    if(len(mipsList) > 0):
+        mips = mipsList.pop(-1)
+        if topo.ifCanDeploy(mips, exp, dst):
+            placeResult2Ofd.append(dst)
+            del srcTorServersList[str(dst)]
+        else:
+            mipsList.append(mips)
+    # 2. sameTor
+    while(len(mipsList) > 0):
+        if len(srcTorServersList) == 0:
+            break
+        if len(srcTorServersList) > 0:
+            mips = mipsList.pop(0)
+            no = chooseBestServ(mips, exp, srcTorServersList, topo)
+            if no != False:
+                placeResult1Ofd.append(int(no))
+                del srcTorServersList[str(no)]
+            else:
+                srcTorServersList = []
+                mipsList.insert(0, mips)
+        if len(srcTorServersList) > 0 and len(mipsList) > 0:
+            mips = mipsList.pop(-1)
+            no = chooseBestServ(mips, exp, srcTorServersList, topo)
+            if no != False:
+                placeResult2Ofd.insert(0, int(no))
+                del srcTorServersList[str(no)]
+            else:
+                srcTorServersList = []
+                mipsList.append(mips)
+    # 3. samePod otherTor 
+    otherServersList = topo.getServersOfSamePod(src)  # 两个参数在同一个Pod
+    while(len(mipsList) > 0):
+        if len(otherServersList) > 0:
+            mips = mipsList.pop(0)
+            no = chooseBestServ(mips, exp, otherServersList, topo)
+            if no != False:
+                placeResult1Ofd.append(int(no))
+                del otherServersList[str(no)]
+            else:
+                otherServersList = []
+                mipsList.insert(0, mips)
+                break
+    # 4. otherPod
+    otherServersList = topo.getServersOfOtherPod(src, dst)  # 两个参数在同一个Pod
+    while(len(mipsList) > 0):
+        if len(otherServersList) > 0:
+            mips = mipsList.pop(0)
+            no = chooseBestServ(mips, exp, otherServersList, topo)
+            if no != False:
+                placeResult1Ofd.append(int(no))
+                del otherServersList[str(no)]
+            else:
+                otherServersList = []
+                mipsList.insert(0, mips)
+                break               
+    # 5. 总放置结果
+    placeResultOfd = placeResult1Ofd+placeResult2Ofd
+    placeResult.append(str(dId)+DELIM+str(placeResultOfd))
+    if sfcLen == len(placeResultOfd):
+        for i in range(sfcLen):
+            no = placeResultOfd[i]
+            mips = mipsList_bak[i]
+            topo.deployToServ(dId, mips, exp, int(no))
+
+def placeSameSerDemand(demand, topo):
+    placeResult1Ofd = []
+    placeResult2Ofd = []
+    [dId, src, dst, exp, mipsList] = demand
+    sfcLen = len(mipsList)
+    mipsList_bak = mipsList[:]
+    srcTorServersList = topo.getServersOfSameTor(src)
+    # 1. first & last vnf of d
+    # 首/尾能放到src/dst则放，因为可以是零跳
+    if(len(mipsList) > 0):
+        mips = mipsList.pop(0)
+        if topo.ifCanDeploy(mips, exp, src):
+            placeResult1Ofd.insert(0, src)
+            del srcTorServersList[str(src)]
+        else:
+            mipsList.insert(0, mips)
+
+    # 2. sameTor otherServer
+    while(len(mipsList) > 0):
+        if len(srcTorServersList) == 0:
+            break
+        if len(srcTorServersList) > 0:
+            mips = mipsList.pop(0)
+            no = chooseBestServ(mips, exp, srcTorServersList, topo)
+            if no != False:
+                placeResult1Ofd.append(int(no))
+                del srcTorServersList[str(no)]
+            else:
+                srcTorServersList = []
+                mipsList.insert(0, mips)
+        if len(srcTorServersList) > 0 and len(mipsList) > 0:
+            mips = mipsList.pop(-1)
+            no = chooseBestServ(mips, exp, srcTorServersList, topo)
+            if no != False:
+                placeResult2Ofd.insert(0, int(no))
+                del srcTorServersList[str(no)]
+            else:
+                srcTorServersList = []
+                mipsList.append(mips)
+    # 3. samePod otherTor 
+    otherServersList = topo.getServersOfSamePod(src)  # 两个参数在同一个Pod
+    while(len(mipsList) > 0):
+        if len(otherServersList) > 0:
+            mips = mipsList.pop(0)
+            no = chooseBestServ(mips, exp, otherServersList, topo)
+            if no != False:
+                placeResult1Ofd.append(int(no))
+                del otherServersList[str(no)]
+            else:
+                otherServersList = []
+                mipsList.insert(0, mips)
+                break
+    # 4. otherPod
+    otherServersList = topo.getServersOfOtherPod(src, dst)  # 两个参数在同一个Pod
+    while(len(mipsList) > 0):
+        if len(otherServersList) > 0:
+            mips = mipsList.pop(0)
+            no = chooseBestServ(mips, exp, otherServersList, topo)
+            if no != False:
+                placeResult1Ofd.append(int(no))
+                del otherServersList[str(no)]
+            else:
+                otherServersList = []
+                mipsList.insert(0, mips)
+                break               
+    # 5. 总放置结果
+    placeResultOfd = placeResult1Ofd+placeResult2Ofd
+    placeResult.append(str(dId)+DELIM+str(placeResultOfd))
+    if sfcLen == len(placeResultOfd):
+        for i in range(sfcLen):
+            no = placeResultOfd[i]
+            mips = mipsList_bak[i]
+            topo.deployToServ(dId, mips, exp, int(no))
+
+
 # 过滤服务器列表
 def filterServList(mips, exp, servList):
     for item in list(servList):
@@ -249,16 +480,6 @@ def main():
         path = os.path.abspath(args['l'])
         with open(path, 'w') as handle:
             write_to_file(handle, placeResult)
-        # path = os.path.abspath(args['d'])
-        # with open(path, 'w') as handle:
-        #     draw(handle, workload)
-
-        # uri = "file://" + path
-        # webbrowser.open(uri, new=2)
-    # except argparse.ArgumentError:
-    #     print(argparse)
-    # except Exception as exc:
-    #     print(exc)
 
 if __name__ == "__main__":
     main()

@@ -96,9 +96,12 @@ class FatTree:
             servList[str(no)] = self.servers[no - self.serverNoMin]
         for no in range(startOmit1, endOmit1):
             del servList[str(no)]
-        for no in range(startOmit2, endOmit2):
-            del servList[str(no)]
+        if startOmit1 != startOmit2:
+            for no in range(startOmit2, endOmit2):
+                del servList[str(no)]
         return servList
+      
+
 
 
     # 计算服务器编号值
