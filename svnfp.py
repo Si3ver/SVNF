@@ -7,7 +7,6 @@ import fattree
 
 DELIM 	= " "
 NEWLINE = "\n"
-k = 20
 
 # 记录放置结果
 placeResult = []
@@ -21,11 +20,12 @@ DEMAND_FORMAT2 = r'(?P<id>[0-9]+)\s(?P<src>[0-9]+)\s(?P<dst>[0-9]+)\s(?P<tr>[0-9
 DEMAND_FORMAT = ''
 
 def def_parser():
-    parser = argparse.ArgumentParser(description='Generating Service Requests!')
-    parser.add_argument('-i', '--input', dest='i', help='Demands file (default is requests.txt)',
-                        type=str, default='requests.txt')
-    parser.add_argument('-l', '--log', dest='l', help='Log file name (default is log.txt)',
-                        type=str, default='result.txt')
+    parser = argparse.ArgumentParser(description='scalable vnf placment algorithm!')
+    parser.add_argument('-k', '--k-ray', dest='k', help='K parameter of K-ary fattree', type=int, required=True)
+    parser.add_argument('-i', '--input', dest='i', help='Demands file (default is output/traffic.txt)',
+                        type=str, default='output/traffic.txt')
+    parser.add_argument('-o', '--output', dest='o', help='place results file name (default is output/result.txt)',
+                        type=str, default='output/result.txt')
     parser.add_argument('-n', '--no', dest='n', help='No id in request file',
                         action='store_true')
     return parser
@@ -448,38 +448,21 @@ def placeSameSerDemand(demand, topo):
             mips = mipsList_bak[i]
             topo.deployToServ(dId, mips, exp, int(no))
 
-
-# 过滤服务器列表
-def filterServList(mips, exp, servList):
-    for item in list(servList):
-        if servList[item] <= mips:  # or (servList[item] - mips)/SC < average[1/exp of vnf existed]:  请考虑增长因子！！！exp
-            del servList[item]
-    return servList
-
 def write_to_file(handle, placeResult):
     for i in range(0, len(placeResult)):
         handle.write("%s%s" % (str(placeResult[i]), NEWLINE))
 
-def draw(handle, workload):
-    x_data = range(0, len(workload))
-    chart = lineChart(name="lineChart", width=1000, height=500)
-    chart.add_serie(y=workload, x=x_data, name='Workload')
-    chart.buildhtml()
-    handle.write(str(chart))
-
-
 def main():
-    # try:
-        topo = fattree.FatTree(k)
-        args = parse_args(def_parser())
-        with open(args['i']) as handle:
-            doStatistics(handle, topo)
-        with open(args['i']) as handle:
-            svnfp(handle, topo)
-        
-        path = os.path.abspath(args['l'])
-        with open(path, 'w') as handle:
-            write_to_file(handle, placeResult)
+    args = parse_args(def_parser())
+    topo = fattree.FatTree(args['k'])
+    with open(args['i']) as handle:
+        doStatistics(handle, topo)
+    with open(args['i']) as handle:
+        svnfp(handle, topo)
+    
+    path = os.path.abspath(args['o'])
+    with open(path, 'w') as handle:
+        write_to_file(handle, placeResult)
 
 if __name__ == "__main__":
     main()

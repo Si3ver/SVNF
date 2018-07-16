@@ -1,31 +1,27 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import sys, os.path, argparse, re, math
-from nvd3 import lineChart
-import webbrowser
 import fattree
 
 DELIM 	= " "
 NEWLINE = "\n"
-k = 20
 
 # 记录放置结果
 analysisResult = []
 
-# 正则匹配一行，并解析各字段
-# 不带id -n
+# 正则匹配
 DEMAND_FORMAT1 = r'(?P<servNo>\[([0-9]+, )*[0-9]*\])'
-# 带id
 DEMAND_FORMAT2 = r'(?P<dId>[0-9]+)\s(?P<servNo>\[([0-9]+, )*[0-9]*\])'
 
 DEMAND_FORMAT = ''
 
 def def_parser():
     parser = argparse.ArgumentParser(description='Analyzing Place Results!')
-    parser.add_argument('-i', '--input', dest='i', help='place results file (default is requests.txt)',
-                        type=str, default='requests.txt')
-    parser.add_argument('-l', '--log', dest='l', help='Log file name (default is log.txt)',
-                        type=str, default='analysis.txt')
+    parser.add_argument('-k', '--k-ray', dest='k', help='K parameter of K-ary fattree', type=int, required=True)
+    parser.add_argument('-i', '--input', dest='i', help='place results file (default is output/result.txt)',
+                        type=str, default='output/result.txt')
+    parser.add_argument('-o', '--output', dest='o', help='analysis file name (default is output/analysis.txt)',
+                        type=str, default='output/analysis.txt')
     parser.add_argument('-n', '--no', dest='n', help='No id in request file',
                         action='store_true')
     return parser
@@ -39,9 +35,8 @@ def parse_args(parser):
     return opts
 
 # 检查并统计流量
-def doAnalysis(handle):
+def doAnalysis(handle, topo):
     hopSum = 0
-    topo = fattree.FatTree(k)
     content = handle.read()
     r = re.compile(DEMAND_FORMAT)
     cntReject = 0
@@ -49,6 +44,7 @@ def doAnalysis(handle):
         d = w.groupdict()
         dId = d['dId']
         servList = d['servNo']
+        # print(dId, servList)
         if len(servList) > 2:
             servList = servList[1:-1].split(', ')
             servList = list(map(int, servList))
@@ -62,7 +58,7 @@ def doAnalysis(handle):
                 hop += topo.hops(servList[i], servList[i+1])
             hopSum += hop
             analysisResult.append(str(dId) + DELIM + str(hop))
-    print(hopSum, hopSum/(1000-41))
+    print(hopSum, hopSum/(1000))
 
     print(cntReject)
     return 0
@@ -73,10 +69,11 @@ def write_to_file(handle, placeResult):
 
 def main():
     args = parse_args(def_parser())
+    topo = fattree.FatTree(args['k'])
     with open(args['i']) as handle:
-        doAnalysis(handle)
+        doAnalysis(handle, topo)
     
-    path = os.path.abspath(args['l'])
+    path = os.path.abspath(args['o'])
     with open(path, 'w') as handle:
         write_to_file(handle, analysisResult)
 
