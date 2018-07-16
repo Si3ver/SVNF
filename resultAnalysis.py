@@ -10,8 +10,8 @@ NEWLINE = "\n"
 analysisResult = []
 
 # 正则匹配
-DEMAND_FORMAT1 = r'(?P<servNo>\[([0-9]+, )*[0-9]*\])'
-DEMAND_FORMAT2 = r'(?P<dId>[0-9]+)\s(?P<servNo>\[([0-9]+, )*[0-9]*\])'
+DEMAND_FORMAT1 = r'(?P<src>[0-9]+)\s(?P<dst>[0-9]+)\s(?P<servNo>\[([0-9]+, )*[0-9]*\])'
+DEMAND_FORMAT2 = r'(?P<dId>[0-9]+)\s(?P<src>[0-9]+)\s(?P<dst>[0-9]+)\s(?P<servNo>\[([0-9]+, )*[0-9]*\])'
 
 DEMAND_FORMAT = ''
 
@@ -36,31 +36,32 @@ def parse_args(parser):
 
 # 检查并统计流量
 def doAnalysis(handle, topo):
-    hopSum = 0
     content = handle.read()
     r = re.compile(DEMAND_FORMAT)
-    cntReject = 0
+    [hopSum, sfcLenSum, hopSumSD, cntReject] = [0]*4
     for w in r.finditer(content):
         d = w.groupdict()
         dId = d['dId']
         servList = d['servNo']
-        # print(dId, servList)
-        if len(servList) > 2:
-            servList = servList[1:-1].split(', ')
-            servList = list(map(int, servList))
-        else:
-            servList = []
-        if len(servList) == 0:
+
+        if servList == '[]':
             cntReject += 1
         else:
+            servList = servList[1:-1].split(', ')
+            servList.insert(0, d['src'])
+            servList.append(d['dst'])
+            servList = list(map(int, servList))
             hop = 0
             for i in range(len(servList)-1):
                 hop += topo.hops(servList[i], servList[i+1])
             hopSum += hop
+            hopSumSD += topo.hops(int(d['src']), int(d['dst']))
+            sfcLenSum += len(servList)-2
             analysisResult.append(str(dId) + DELIM + str(hop))
-    print(hopSum, hopSum/(1000))
-
-    print(cntReject)
+    print("reject demands: %d" % (cntReject))
+    print("flow hops, SUM=%d, AVG=%f" % (hopSum, hopSum/(1000)))
+    print("sfcLen, SUM=%d, AVG=%f" % (sfcLenSum, sfcLenSum/(1000)))
+    print("src->dst hops, SUM=%d, AVG=%f" % (hopSumSD, hopSumSD/(1000)))
     return 0
 
 def write_to_file(handle, placeResult):

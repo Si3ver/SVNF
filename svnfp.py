@@ -105,7 +105,7 @@ def svnfp(handle, topo):
             placeSameTorDemand(dTrans, topo)
         else:
             placeSameSerDemand(dTrans, topo)
-        # topo.display()
+    topo.display()
 
 def chooseBestServ(mips, exp, serversList, topo):
     # print(mips, serversList)
@@ -122,7 +122,6 @@ def placeDiffPodDemand(demand, topo):
     placeResult1Ofd = []
     placeResult2Ofd = []
     [dId, src, dst, exp, mipsList] = demand
-    sfcLen = len(mipsList)
     mipsList_bak = mipsList[:]
     srcTorServersList = topo.getServersOfSameTor(src)
     dstTorServersList = topo.getServersOfSameTor(dst)
@@ -204,20 +203,13 @@ def placeDiffPodDemand(demand, topo):
                 otherServersList = []
                 mipsList.insert(0, mips)
                 break
-    # 6. 总放置结果
-    placeResultOfd = placeResult1Ofd+placeResult2Ofd
-    placeResult.append(str(dId)+DELIM+str(placeResultOfd))
-    if sfcLen == len(placeResultOfd):
-        for i in range(sfcLen):
-            no = placeResultOfd[i]
-            mips = mipsList_bak[i]
-            topo.deployToServ(dId, mips, exp, int(no))
+    # place
+    addtoResult(placeResult1Ofd + placeResult2Ofd, [dId, src, dst, exp, mipsList_bak], topo)
 
 def placeSamePodDemand(demand, topo):
     placeResult1Ofd = []
     placeResult2Ofd = []
     [dId, src, dst, exp, mipsList] = demand
-    sfcLen = len(mipsList)
     mipsList_bak = mipsList[:]
     srcTorServersList = topo.getServersOfSameTor(src)
     dstTorServersList = topo.getServersOfSameTor(dst)
@@ -285,20 +277,13 @@ def placeSamePodDemand(demand, topo):
                 otherServersList = []
                 mipsList.insert(0, mips)
                 break
-    # 5. 总放置结果
-    placeResultOfd = placeResult1Ofd+placeResult2Ofd
-    placeResult.append(str(dId)+DELIM+str(placeResultOfd))
-    if sfcLen == len(placeResultOfd):
-        for i in range(sfcLen):
-            no = placeResultOfd[i]
-            mips = mipsList_bak[i]
-            topo.deployToServ(dId, mips, exp, int(no))
+    # place
+    addtoResult(placeResult1Ofd + placeResult2Ofd, [dId, src, dst, exp, mipsList_bak], topo)
 
 def placeSameTorDemand(demand, topo):
     placeResult1Ofd = []
     placeResult2Ofd = []
     [dId, src, dst, exp, mipsList] = demand
-    sfcLen = len(mipsList)
     mipsList_bak = mipsList[:]
     srcTorServersList = topo.getServersOfSameTor(src)
     # 1. first & last vnf of d
@@ -365,20 +350,13 @@ def placeSameTorDemand(demand, topo):
                 otherServersList = []
                 mipsList.insert(0, mips)
                 break               
-    # 5. 总放置结果
-    placeResultOfd = placeResult1Ofd+placeResult2Ofd
-    placeResult.append(str(dId)+DELIM+str(placeResultOfd))
-    if sfcLen == len(placeResultOfd):
-        for i in range(sfcLen):
-            no = placeResultOfd[i]
-            mips = mipsList_bak[i]
-            topo.deployToServ(dId, mips, exp, int(no))
+    # place
+    addtoResult(placeResult1Ofd + placeResult2Ofd, [dId, src, dst, exp, mipsList_bak], topo)
 
 def placeSameSerDemand(demand, topo):
     placeResult1Ofd = []
     placeResult2Ofd = []
     [dId, src, dst, exp, mipsList] = demand
-    sfcLen = len(mipsList)
     mipsList_bak = mipsList[:]
     srcTorServersList = topo.getServersOfSameTor(src)
     # 1. first & last vnf of d
@@ -390,7 +368,6 @@ def placeSameSerDemand(demand, topo):
             del srcTorServersList[str(src)]
         else:
             mipsList.insert(0, mips)
-
     # 2. sameTor otherServer
     while(len(mipsList) > 0):
         if len(srcTorServersList) == 0:
@@ -438,14 +415,18 @@ def placeSameSerDemand(demand, topo):
             else:
                 otherServersList = []
                 mipsList.insert(0, mips)
-                break               
-    # 5. 总放置结果
-    placeResultOfd = placeResult1Ofd+placeResult2Ofd
-    placeResult.append(str(dId)+DELIM+str(placeResultOfd))
-    if sfcLen == len(placeResultOfd):
+                break 
+    # place
+    addtoResult(placeResult1Ofd + placeResult2Ofd, [dId, src, dst, exp, mipsList_bak], topo)
+
+def addtoResult(resultOfd, demand, topo):
+    [dId, src, dst, exp, mipsList] = demand
+    sfcLen = len(mipsList)
+    placeResult.append(str(dId)+DELIM+str(src)+DELIM+str(dst)+DELIM+str(resultOfd))
+    if sfcLen == len(resultOfd):
         for i in range(sfcLen):
-            no = placeResultOfd[i]
-            mips = mipsList_bak[i]
+            no = resultOfd[i]
+            mips = mipsList[i]
             topo.deployToServ(dId, mips, exp, int(no))
 
 def write_to_file(handle, placeResult):

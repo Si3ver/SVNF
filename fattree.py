@@ -21,7 +21,7 @@ class FatTree:
         for i in range(int(self.k**3/4)):
             if self.servers[i] < 100000:
                 usedServers.append(i + self.serverNoMin)      
-        print('used servers: %s' % str(usedServers))
+        print('used servers: %d' % len(usedServers))
 
     def getScaleOfServers(self, no):
         return self.scaleOfServers[no - self.serverNoMin]
