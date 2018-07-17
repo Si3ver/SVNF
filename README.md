@@ -52,13 +52,15 @@ python3 resultAnalysis.py -k 20
 1. traffic.txt
 
 ```
+r'(?P<src>[0-9]+)\s(?P<dst>[0-9]+)\s(?P<tr>[0-9]+\.[0-9]+)\s(?P<peak>[0-9]+\.[0-9]+)\s(?P<sfcLen>[0-9]+)\s(?P<sfc>\[([0-9]+, )*[0-9]+\])'
 <src, dst, tr, peak, sfcLen, <sfc>>
 ```
 
 2. result.txt
 
 ```
-<dId, src, dst, <severNo>>
+r'(?P<dId>[0-9]+)\s(?P<src>[0-9]+)\s(?P<dst>[0-9]+)\s(?P<exp>[0-9]+\.[0-9]+)\s(?P<mipsList>\[([0-9]+, )*[0-9]*\])\s(?P<servList>\[([0-9]+, )*[0-9]*\])'
+<dId, src, dst, exp, <mipsList>, <severNo>>
 serverNo 为对应vnf的所部署到的服务器编号，若为空，表示reject；
 ```
 
@@ -66,4 +68,14 @@ serverNo 为对应vnf的所部署到的服务器编号，若为空，表示rejec
 
 ```
 <dId, hops>
+```
+
+## 评估
+
+1. 随着 tr -> peak的流数量增加，丢包率的变化情况。
+
+```
+python3 plr.py -k 20 -i ../output/result.txt -o ../output/plr.txt
+或简写如下：
+python3 plr.py -k 20
 ```

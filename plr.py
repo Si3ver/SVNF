@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# 测量丢包率 packet loss rate
 import sys, os.path, argparse, re, math
 import fattree
 
@@ -10,8 +11,8 @@ NEWLINE = "\n"
 analysisResult = []
 
 # 正则匹配
-PLACE_FORMAT1 = r'(?P<src>[0-9]+)\s(?P<dst>[0-9]+)\s(?P<exp>[0-9]+\.[0-9]+)\s(?P<MipsList>\[([0-9]+, )*[0-9]*\])\s(?P<servNo>\[([0-9]+, )*[0-9]*\])'
-PLACE_FORMAT2 = r'(?P<dId>[0-9]+)\s(?P<src>[0-9]+)\s(?P<dst>[0-9]+)\s(?P<exp>[0-9]+\.[0-9]+)\s(?P<MipsList>\[([0-9]+, )*[0-9]*\])\s(?P<servNo>\[([0-9]+, )*[0-9]*\])'
+PLACE_FORMAT1 = r'(?P<src>[0-9]+)\s(?P<dst>[0-9]+)\s(?P<exp>[0-9]+\.[0-9]+)\s(?P<mipsList>\[([0-9]+, )*[0-9]*\])\s(?P<servNo>\[([0-9]+, )*[0-9]*\])'
+PLACE_FORMAT2 = r'(?P<dId>[0-9]+)\s(?P<src>[0-9]+)\s(?P<dst>[0-9]+)\s(?P<exp>[0-9]+\.[0-9]+)\s(?P<mipsList>\[([0-9]+, )*[0-9]*\])\s(?P<servList>\[([0-9]+, )*[0-9]*\])'
 
 PLACE_FORMAT = ''
 
@@ -21,7 +22,7 @@ def def_parser():
     parser.add_argument('-i', '--input', dest='i', help='place results file (default is output/result.txt)',
                         type=str, default='output/result.txt')
     parser.add_argument('-o', '--output', dest='o', help='analysis file name (default is output/analysis.txt)',
-                        type=str, default='output/analysis.txt')
+                        type=str, default='output/plr.txt')
     parser.add_argument('-n', '--no', dest='n', help='No id in request file',
                         action='store_true')
     return parser
@@ -35,33 +36,18 @@ def parse_args(parser):
     return opts
 
 # 检查并统计流量
-def doAnalysis(handle, topo):
+def placeToTopo(handle, topo):
     content = handle.read()
     r = re.compile(PLACE_FORMAT)
-    [hopSum, sfcLenSum, hopSumSD, cntReject] = [0]*4
     for w in r.finditer(content):
         d = w.groupdict()
-        dId = d['dId']
-        servList = d['servNo']
-
-        if servList == '[]':
-            cntReject += 1
-        else:
-            servList = servList[1:-1].split(', ')
-            servList.insert(0, d['src'])
-            servList.append(d['dst'])
-            servList = list(map(int, servList))
-            hop = 0
-            for i in range(len(servList)-1):
-                hop += topo.hops(servList[i], servList[i+1])
-            hopSum += hop
-            hopSumSD += topo.hops(int(d['src']), int(d['dst']))
-            sfcLenSum += len(servList)-2
-            analysisResult.append(str(dId) + DELIM + str(hop))
-    print("reject demands: %d" % (cntReject))
-    print("flow hops, SUM=%d, AVG=%f" % (hopSum, hopSum/(1000)))
-    print("sfcLen, SUM=%d, AVG=%f" % (sfcLenSum, sfcLenSum/(1000)))
-    print("src->dst hops, SUM=%d, AVG=%f" % (hopSumSD, hopSumSD/(1000)))
+        [dId, _src, _dst, exp, mipsList, servList] = [int(d['dId']), int(d['src']), int(d['dst']), float(d['exp']), d['mipsList'][1:-1].split(','), d['servList'][1:-1].split(',')]
+        mipsList = d['mipsList'][1:-1].split(',')
+        mipsList = list(map(float, mipsList))
+        servList = list(map(int, servList))
+        for i in range(len(mipsList)):
+            topo.deployToServ(dId, mipsList[i], exp, servList[i])
+        pass
     return 0
 
 def write_to_file(handle, placeResult):
@@ -72,11 +58,12 @@ def main():
     args = parse_args(def_parser())
     topo = fattree.FatTree(args['k'])
     with open(args['i']) as handle:
-        doAnalysis(handle, topo)
+        placeToTopo(handle, topo)
+    topo.display()
     
-    path = os.path.abspath(args['o'])
-    with open(path, 'w') as handle:
-        write_to_file(handle, analysisResult)
+    # path = os.path.abspath(args['o'])
+    # with open(path, 'w') as handle:
+    #     write_to_file(handle, analysisResult)
 
 if __name__ == "__main__":
     main()

@@ -422,7 +422,7 @@ def placeSameSerDemand(demand, topo):
 def addtoResult(resultOfd, demand, topo):
     [dId, src, dst, exp, mipsList] = demand
     sfcLen = len(mipsList)
-    placeResult.append(str(dId)+DELIM+str(src)+DELIM+str(dst)+DELIM+str(resultOfd))
+    placeResult.append(str(dId)+DELIM+str(src)+DELIM+str(dst)+DELIM+str(exp)+DELIM+str(mipsList)+DELIM+str(resultOfd))
     if sfcLen == len(resultOfd):
         for i in range(sfcLen):
             no = resultOfd[i]

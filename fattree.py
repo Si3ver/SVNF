@@ -7,10 +7,11 @@ import math
 
 class FatTree:
     def __init__(self, k):
+        self.serverCapacity = 100000                            # 一台服务器默认 100000mips 计算能力
         self.k = int(k)
         self.serverNoMin = int(5*k**2/4)                        # 服务器最小编号值
         self.serverNoMax = int(self.serverNoMin + k**3/4 - 1)   # 服务器最大编号值
-        self.servers = [100000]*int(k**3/4)                     # 记录服务器剩余的mips值，共k**3/4台服务器
+        self.servers = [self.serverCapacity]*int(k**3/4)                     # 记录服务器剩余的mips值，共k**3/4台服务器
         self.demandsInServers = [[0]]*int(k**3/4)               # 记录服务器经过的demands id
         self.scaleOfServers = [0]*int(k**3/4)                   # 需要满足 任意一条流增大到exp，服务器能Vertical scaling!!!
         
@@ -19,14 +20,17 @@ class FatTree:
         usedServers = []
         # print(self.servers)
         for i in range(int(self.k**3/4)):
-            if self.servers[i] < 100000:
+            if self.servers[i] < self.serverCapacity:
                 usedServers.append(i + self.serverNoMin)      
         print('used servers: %d' % len(usedServers))
+        servUtility = float(sum(self.servers))*100/(self.serverCapacity*self.k**3/4)
+        print('sum utility: %.3f%%' % servUtility)
+        print(type(sum(self.servers)*100))
+
 
     def getScaleOfServers(self, no):
         return self.scaleOfServers[no - self.serverNoMin]
 
-    # def getdemand
 
     # 保证了纵向可扩展性VS
     def ifCanDeploy(self, mips, exp, no):
@@ -34,6 +38,7 @@ class FatTree:
         if leftMips > mips * exp and leftMips - mips > self.getScaleOfServers(no):      # 此条流能扩张 and 最大的已放置流能扩张
             return True
         return False
+
 
     # 评分
     def scoredServers(self, mips, exp, serversList):
@@ -47,7 +52,6 @@ class FatTree:
         return scores
 
 
-
     # 把vnf部署到服务器里，表现在消耗了对应服务器的mips
     def deployToServ(self, dId, mips, exp, no):
         self.servers[no - self.serverNoMin] -= mips
@@ -55,7 +59,6 @@ class FatTree:
         if mips*(exp-1) > self.scaleOfServers[no - self.serverNoMin]:
             self.scaleOfServers[no - self.serverNoMin] = mips*(exp-1)
         
-
 
     def getServersOfSameTor(self, no):
         [pod, tor, _host] = self.parsePos(no)
@@ -102,8 +105,6 @@ class FatTree:
         return servList
       
 
-
-
     # 计算服务器编号值
     def calcServNo(self, pod, tor, host):
         if pod >= self.k:
@@ -116,6 +117,7 @@ class FatTree:
             print("wrong server number")
             return
         return int(self.serverNoMin + pod * (self.k**2/4) + tor * self.k/2 + host)
+
 
     # 根据编号值no，解析位置
     def parsePos(self, no):
@@ -138,6 +140,7 @@ class FatTree:
             host = nth % (self.k**2/4) % (self.k/2)
             return [int(pod), int(tor), int(host)]
 
+
     # 计算两个节点的跳数
     def hops(self, no1, no2):
         res1 = self.parsePos(no1)
@@ -155,6 +158,7 @@ class FatTree:
         else:
             return False
 
+
     # 对于一个VNF来说，mips = tau*tr，tau仅仅与VNF类型有关。假定其在180～220之间均匀分布。
     def mips(self, sfc, tr):
         vnfSum = 60
@@ -166,22 +170,10 @@ class FatTree:
             res.append(math.ceil(vnfTau * tr))
         return res
 
-if __name__ == "__main__":
-    # src = 1670
-    # dst = 566
-    # tr = 16.64
-    # peak = 55.12
-    # sfcLen = 4
-    # sfc = [29, 52, 31, 17]
-    # topo = FatTree(20)
-    # print(topo.hops(src, dst))
-    # print(topo.mips(sfc, tr))
-    # print(topo.mips(sfc, peak))
-    
+
+if __name__ == "__main__":    
     topo = FatTree(20)
     ser = topo.getServersOfSameTor(2160)
     
-    print(ser)
-    
-    
+    print(ser)   
     
