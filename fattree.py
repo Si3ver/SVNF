@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import sys
-import os.path
+import sys, os.path, math
 import argparse
-import math
 
 class FatTree:
     def __init__(self, k):
@@ -11,7 +9,7 @@ class FatTree:
         self.k = int(k)
         self.serverNoMin = int(5*k**2/4)                        # 服务器最小编号值
         self.serverNoMax = int(self.serverNoMin + k**3/4 - 1)   # 服务器最大编号值
-        self.servers = [self.serverCapacity]*int(k**3/4)                     # 记录服务器剩余的mips值，共k**3/4台服务器
+        self.servers = [self.serverCapacity]*int(k**3/4)        # 记录服务器剩余的mips值，共k**3/4台服务器
         self.demandsInServers = [[0]]*int(k**3/4)               # 记录服务器经过的demands id
         self.scaleOfServers = [0]*int(k**3/4)                   # 需要满足 任意一条流增大到exp，服务器能Vertical scaling!!!
         

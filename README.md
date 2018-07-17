@@ -75,7 +75,7 @@ serverNo 为对应vnf的所部署到的服务器编号，若为空，表示rejec
 1. 随着 tr -> peak的流数量增加，丢包率的变化情况。
 
 ```
-python3 plr.py -k 20 -i ../output/result.txt -o ../output/plr.txt
+python3 plr.py -k 20 -i ../output/result.txt -o ../output/plr.txt -s 10
 或简写如下：
 python3 plr.py -k 20
 ```

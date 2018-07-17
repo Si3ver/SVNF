@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # 测量丢包率 packet loss rate
 import sys, os.path, argparse, re, math
+import random
 import fattree
 
 DELIM 	= " "
@@ -25,6 +26,7 @@ def def_parser():
                         type=str, default='output/plr.txt')
     parser.add_argument('-n', '--no', dest='n', help='No id in request file',
                         action='store_true')
+    parser.add_argument('-s', '--seed', dest='s', help='Random seed', type=int, default=10)
     return parser
 
 def parse_args(parser):
@@ -35,20 +37,25 @@ def parse_args(parser):
     PLACE_FORMAT = PLACE_FORMAT1 if opts['n'] else PLACE_FORMAT2
     return opts
 
-# 检查并统计流量
-def placeToTopo(handle, topo):
+def parseResults(handle):
     content = handle.read()
     r = re.compile(PLACE_FORMAT)
+    results = []
     for w in r.finditer(content):
         d = w.groupdict()
-        [dId, _src, _dst, exp, mipsList, servList] = [int(d['dId']), int(d['src']), int(d['dst']), float(d['exp']), d['mipsList'][1:-1].split(','), d['servList'][1:-1].split(',')]
+        [dId, src, dst, exp, mipsList, servList] = [int(d['dId']), int(d['src']), int(d['dst']), float(d['exp']), d['mipsList'][1:-1].split(','), d['servList'][1:-1].split(',')]
         mipsList = d['mipsList'][1:-1].split(',')
         mipsList = list(map(float, mipsList))
         servList = list(map(int, servList))
+        results.append([dId, src, dst, exp, mipsList, servList])
+    return results
+
+# 把result放入topo
+def placeToTopo(results, topo):
+    for result in results:
+        [dId, _src, _dst, exp, mipsList, servList] = result
         for i in range(len(mipsList)):
             topo.deployToServ(dId, mipsList[i], exp, servList[i])
-        pass
-    return 0
 
 def write_to_file(handle, placeResult):
     for i in range(0, len(placeResult)):
@@ -56,9 +63,11 @@ def write_to_file(handle, placeResult):
 
 def main():
     args = parse_args(def_parser())
-    topo = fattree.FatTree(args['k'])
+    random.seed(args['s'])
     with open(args['i']) as handle:
-        placeToTopo(handle, topo)
+        results = parseResults(handle)
+    topo = fattree.FatTree(args['k'])
+    placeToTopo(results, topo)
     topo.display()
     
     # path = os.path.abspath(args['o'])
