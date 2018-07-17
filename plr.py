@@ -4,12 +4,15 @@
 import sys, os.path, argparse, re, math
 import random
 import fattree
+from nvd3 import lineChart
+import webbrowser
 
 DELIM 	= " "
 NEWLINE = "\n"
 
 # 记录放置结果
 analysisResult = []
+Workload = []
 
 # 正则匹配
 PLACE_FORMAT1 = r'(?P<src>[0-9]+)\s(?P<dst>[0-9]+)\s(?P<exp>[0-9]+\.[0-9]+)\s(?P<mipsList>\[([0-9]+, )*[0-9]*\])\s(?P<servNo>\[([0-9]+, )*[0-9]*\])'
@@ -28,6 +31,8 @@ def def_parser():
     parser.add_argument('-n', '--no', dest='n', help='No id in request file',
                         action='store_true')
     parser.add_argument('-s', '--seed', dest='s', help='Random seed', type=int, default=10)
+    parser.add_argument('-d', '--draw', dest='d', help='Draw file name (default is index.html)',
+                        type=str, default='index.html')
     return parser
 
 def parse_args(parser):
@@ -66,6 +71,13 @@ def write_to_file(handle, placeResult):
     for i in range(0, len(placeResult)):
         handle.write("%s%s" % (str(placeResult[i]), NEWLINE))
 
+def draw(handle, workload):
+    x_data = range(0, len(workload))
+    chart = lineChart(name="lineChart", width=1000, height=500)
+    chart.add_serie(y=workload, x=x_data, name='Workload')
+    chart.buildhtml()
+    handle.write(str(chart))
+
 def main():
     args = parse_args(def_parser())
     random.seed(args['s'])
@@ -81,6 +93,10 @@ def main():
     random.shuffle(expDemandList)
     # print(expDemandList)                              # 流放大顺序
     topo.expStressTest(expDemandList, results)
+
+    # path = os.path.abspath(args['d'])
+    # with open(path, 'w') as handle:
+    #     draw(handle, workload)
     
     # path = os.path.abspath(args['o'])
     # with open(path, 'w') as handle:

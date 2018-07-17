@@ -87,20 +87,24 @@ python3 plr.py
 + -s 指定随机数的起始随机种子
 
 
-## mytest
+## 实验数据
 
 使用20-阶胖树拓扑，共有2000台服务器，每台服务器计算能力为100000mips。
 
 1. 1000条流量
 
+```
 python3 traffic.py -c 1000 -k 20 -Tm 10 -al 2.1 -s 10 -o output/traffic.txt
 python3 svnfp.py -k 20 -i output/traffic.txt -o output/result.txt -n
 python3 resultAnalysis.py -c 1000 -k 20 -i output/result.txt -o output/analysis.txt
 python3 plr.py -c 1000 -k 20 -i output/result.txt -o output/plr.txt -s 10
+```
 
 2. 5000条流量
 
+```
 python3 traffic.py -c 5000 -k 20 -Tm 10 -al 2.1 -s 10 -o output/traffic.txt
 python3 svnfp.py -k 20 -i output/traffic.txt -o output/result.txt -n
 python3 resultAnalysis.py -c 5000 -k 20 -i output/result.txt -o output/analysis.txt
 python3 plr.py -c 5000 -k 20 -i output/result.txt -o output/plr.txt -s 10
+```
