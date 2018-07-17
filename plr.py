@@ -19,6 +19,7 @@ PLACE_FORMAT = ''
 
 def def_parser():
     parser = argparse.ArgumentParser(description='Analyzing Place Results!')
+    parser.add_argument('-c', '--count', dest='c', help='How many service request', type=int, default=1000)
     parser.add_argument('-k', '--k-ray', dest='k', help='K parameter of K-ary fattree', type=int, required=True)
     parser.add_argument('-i', '--input', dest='i', help='place results file (default is output/result.txt)',
                         type=str, default='output/result.txt')
@@ -46,7 +47,11 @@ def parseResults(handle):
         [dId, src, dst, exp, mipsList, servList] = [int(d['dId']), int(d['src']), int(d['dst']), float(d['exp']), d['mipsList'][1:-1].split(','), d['servList'][1:-1].split(',')]
         mipsList = d['mipsList'][1:-1].split(',')
         mipsList = list(map(float, mipsList))
-        servList = list(map(int, servList))
+        # print(servList[0], type(servList[0]))
+        if servList[0] != '':
+            servList = list(map(int, servList))
+        else:
+            servList = []
         results.append([dId, src, dst, exp, mipsList, servList])
     return results
 
@@ -54,7 +59,7 @@ def parseResults(handle):
 def placeToTopo(results, topo):
     for result in results:
         [dId, _src, _dst, exp, mipsList, servList] = result
-        for i in range(len(mipsList)):
+        for i in range(len(servList)):
             topo.deployToServ(dId, mipsList[i], exp, servList[i])
 
 def write_to_file(handle, placeResult):
@@ -67,8 +72,15 @@ def main():
     with open(args['i']) as handle:
         results = parseResults(handle)
     topo = fattree.FatTree(args['k'])
+    print('------1. before exp------')
     placeToTopo(results, topo)
     topo.display()
+
+    print('------2. start exp------')
+    expDemandList = list(range(args['c']))
+    random.shuffle(expDemandList)
+    # print(expDemandList)                              # 流放大顺序
+    topo.expStressTest(expDemandList, results)
     
     # path = os.path.abspath(args['o'])
     # with open(path, 'w') as handle:

@@ -28,7 +28,7 @@ python3 traffic.py -c 1000 -k 20 -Tm 10 -al 2.1 -s 10 -o output/traffic.txt
 2. 运行SVNFP算法，进行VNF放置
 
 ```
-python3 svnfp.py -k 20 -i output/traffic.txt -o output/result.txt
+python3 svnfp.py -k 20 -i output/traffic.txt -o output/result.txt -n
 或简写如下：
 python3 svnfp.py -k 20 -n
 ```
@@ -75,7 +75,32 @@ serverNo 为对应vnf的所部署到的服务器编号，若为空，表示rejec
 1. 随着 tr -> peak的流数量增加，丢包率的变化情况。
 
 ```
-python3 plr.py -k 20 -i ../output/result.txt -o ../output/plr.txt -s 10
+python3 plr.py -c 1000 -k 20 -i ../output/result.txt -o ../output/plr.txt -s 10
 或简写如下：
-python3 plr.py -k 20
+python3 plr.py
 ```
+
++ -c 指定生成的流量条数，默认1000条
++ -k 指定拓扑基于 k-阶胖树 拓扑，默认20
++ -i 指定读入文件名
++ -o 指定输出文件名
++ -s 指定随机数的起始随机种子
+
+
+## mytest
+
+使用20-阶胖树拓扑，共有2000台服务器，每台服务器计算能力为100000mips。
+
+1. 1000条流量
+
+python3 traffic.py -c 1000 -k 20 -Tm 10 -al 2.1 -s 10 -o output/traffic.txt
+python3 svnfp.py -k 20 -i output/traffic.txt -o output/result.txt -n
+python3 resultAnalysis.py -c 1000 -k 20 -i output/result.txt -o output/analysis.txt
+python3 plr.py -c 1000 -k 20 -i output/result.txt -o output/plr.txt -s 10
+
+2. 5000条流量
+
+python3 traffic.py -c 5000 -k 20 -Tm 10 -al 2.1 -s 10 -o output/traffic.txt
+python3 svnfp.py -k 20 -i output/traffic.txt -o output/result.txt -n
+python3 resultAnalysis.py -c 5000 -k 20 -i output/result.txt -o output/analysis.txt
+python3 plr.py -c 5000 -k 20 -i output/result.txt -o output/plr.txt -s 10

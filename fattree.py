@@ -12,6 +12,7 @@ class FatTree:
         self.servers = [self.serverCapacity]*int(k**3/4)        # 记录服务器剩余的mips值，共k**3/4台服务器
         self.demandsInServers = [[0]]*int(k**3/4)               # 记录服务器经过的demands id
         self.scaleOfServers = [0]*int(k**3/4)                   # 需要满足 任意一条流增大到exp，服务器能Vertical scaling!!!
+        self.plServerList = {}                                  # 记录丢包的服务器 key:serNo value:plr
         
     
     def display(self):
@@ -21,9 +22,51 @@ class FatTree:
             if self.servers[i] < self.serverCapacity:
                 usedServers.append(i + self.serverNoMin)      
         print('used servers: %d' % len(usedServers))
-        servUtility = float(sum(self.servers))*100/(self.serverCapacity*self.k**3/4)
-        print('sum utility: %.3f%%' % servUtility)
-        print(type(sum(self.servers)*100))
+        # 服务器资源利用率
+        sumUsedMips = 0
+        for serv in self.servers:
+            if serv < 0:
+                sumUsedMips += self.serverCapacity
+            else:
+                sumUsedMips += self.serverCapacity - serv
+        servUtility = sumUsedMips/(self.serverCapacity*self.k**3/4)
+        print('sum utility: %.3f%%' % float(servUtility*100))
+        [cntPlrServ, sumPlr] = self.calcplr()
+        print('sum plServers=%d, sum plr=%.3f' % (cntPlrServ, sumPlr))
+
+    
+    def calcplr(self):
+        cnt = 0
+        sumPlr = 0.0
+        for _servNo, plr in self.plServerList.items():
+            sumPlr += plr
+            cnt += 1
+        if cnt == 0:
+            return [0, 0]
+        return [cnt, sumPlr/cnt]
+
+
+    def expStressTest(self, demandList, results):
+        # cnt = 0
+        for dId in demandList:
+            print(dId, len(results))
+            result = results[dId]
+            self.expDemand(result)
+            self.display()
+            # cnt += 1
+            # if cnt == 2:
+                # break
+
+    def expDemand(self, result):
+        [_dId, _src, _dst, _exp, mipsList, servList] = result
+        for i in range(len(servList)):
+            mips = mipsList[i]
+            servNo = servList[i]
+            self.servers[servNo - self.serverNoMin] -= mips
+            
+            # 检测是否丢包
+            if self.servers[servNo - self.serverNoMin] < 0:
+                self.plServerList[servNo] = (0 - self.servers[servNo - self.serverNoMin])/self.serverCapacity
 
 
     def getScaleOfServers(self, no):

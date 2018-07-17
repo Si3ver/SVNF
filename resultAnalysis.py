@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# 根据放置结果，计算流路径长度，把每条流的长度输出到文件analysis.txt
 import sys, os.path, argparse, re, math
 import fattree
 
@@ -17,6 +18,7 @@ PLACE_FORMAT = ''
 
 def def_parser():
     parser = argparse.ArgumentParser(description='Analyzing Place Results!')
+    parser.add_argument('-c', '--count', dest='c', help='How many service request', type=int, default=1000)
     parser.add_argument('-k', '--k-ray', dest='k', help='K parameter of K-ary fattree', type=int, required=True)
     parser.add_argument('-i', '--input', dest='i', help='place results file (default is output/result.txt)',
                         type=str, default='output/result.txt')
@@ -35,7 +37,7 @@ def parse_args(parser):
     return opts
 
 # 检查并统计流量
-def doAnalysis(handle, topo):
+def doAnalysis(handle, topo, cntDemands):
     content = handle.read()
     r = re.compile(PLACE_FORMAT)
     [hopSum, sfcLenSum, hopSumSD, cntReject] = [0]*4
@@ -59,9 +61,9 @@ def doAnalysis(handle, topo):
             sfcLenSum += len(servList)-2
             analysisResult.append(str(dId) + DELIM + str(hop))
     print("reject demands: %d" % (cntReject))
-    print("flow hops, SUM=%d, AVG=%f" % (hopSum, hopSum/(1000)))
-    print("sfcLen, SUM=%d, AVG=%f" % (sfcLenSum, sfcLenSum/(1000)))
-    print("src->dst hops, SUM=%d, AVG=%f" % (hopSumSD, hopSumSD/(1000)))
+    print("flow hops, SUM=%d, AVG=%f" % (hopSum, hopSum/(cntDemands)))
+    print("sfcLen, SUM=%d, AVG=%f" % (sfcLenSum, sfcLenSum/(cntDemands)))
+    print("src->dst hops, SUM=%d, AVG=%f" % (hopSumSD, hopSumSD/(cntDemands)))
     return 0
 
 def write_to_file(handle, placeResult):
@@ -72,7 +74,7 @@ def main():
     args = parse_args(def_parser())
     topo = fattree.FatTree(args['k'])
     with open(args['i']) as handle:
-        doAnalysis(handle, topo)
+        doAnalysis(handle, topo, args['c'])
     
     path = os.path.abspath(args['o'])
     with open(path, 'w') as handle:
