@@ -71,10 +71,10 @@ def write_to_file(handle, placeResult):
     for i in range(0, len(placeResult)):
         handle.write("%s%s" % (str(placeResult[i]), NEWLINE))
 
-def draw(handle, workload):
-    x_data = range(0, len(workload))
+def draw_plr(handle, plrList):
+    x_data = range(0, len(plrList))
     chart = lineChart(name="lineChart", width=1000, height=500)
-    chart.add_serie(y=workload, x=x_data, name='Workload')
+    chart.add_serie(y=plrList, x=x_data, name='packet loss rate')
     chart.buildhtml()
     handle.write(str(chart))
 
@@ -91,16 +91,16 @@ def main():
     print('------2. start exp------')
     expDemandList = list(range(args['c']))
     random.shuffle(expDemandList)
-    # print(expDemandList)                              # 流放大顺序
-    topo.expStressTest(expDemandList, results)
+    # print(expDemandList)                              # 流放大顺序 dId列表
+    [_plrServList, plrList] = topo.expStressTest(expDemandList, results)
 
-    # path = os.path.abspath(args['d'])
-    # with open(path, 'w') as handle:
-    #     draw(handle, workload)
-    
-    # path = os.path.abspath(args['o'])
-    # with open(path, 'w') as handle:
-    #     write_to_file(handle, analysisResult)
+    path = os.path.abspath(args['d'])
+    with open(path, 'w') as handle:
+        draw_plr(handle, plrList)
+
+    path = os.path.abspath(args['o'])
+    with open(path, 'w') as handle:
+        write_to_file(handle, plrList)
 
 if __name__ == "__main__":
     main()

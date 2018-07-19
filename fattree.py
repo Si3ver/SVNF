@@ -31,8 +31,6 @@ class FatTree:
                 sumUsedMips += self.serverCapacity - serv
         servUtility = sumUsedMips/(self.serverCapacity*self.k**3/4)
         print('sum utility: %.3f%%' % float(servUtility*100))
-        [cntPlrServ, sumPlr] = self.calcplr()
-        print('sum plServers=%d, sum plr=%.3f' % (cntPlrServ, sumPlr))
 
     
     def calcplr(self):
@@ -47,15 +45,19 @@ class FatTree:
 
 
     def expStressTest(self, demandList, results):
-        # cnt = 0
+        plrServList = []
+        plrList = []
         for dId in demandList:
             print(dId, len(results))
             result = results[dId]
             self.expDemand(result)
             self.display()
-            # cnt += 1
-            # if cnt == 2:
-                # break
+            [cntPlrServ, sumPlr] = self.calcplr()
+            print('sum plServers=%d, sum plr=%.3f' % (cntPlrServ, sumPlr))
+            plrServList.append(plrList)
+            plrList.append(sumPlr)
+        return [plrServList, plrList]
+
 
     def expDemand(self, result):
         [_dId, _src, _dst, _exp, mipsList, servList] = result
