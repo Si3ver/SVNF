@@ -92,15 +92,15 @@ def main():
     expDemandList = list(range(args['c']))
     random.shuffle(expDemandList)
     # print(expDemandList)                              # 流放大顺序 dId列表
-    [_plrServList, plrList] = topo.expStressTest(expDemandList, results)
+    [_plrServList, plr1List, plr2List] = topo.expStressTest(expDemandList, results)
 
     path = os.path.abspath(args['d'])
     with open(path, 'w') as handle:
-        draw_plr(handle, plrList)
+        draw_plr(handle, plr2List)
 
     path = os.path.abspath(args['o'])
     with open(path, 'w') as handle:
-        write_to_file(handle, plrList)
+        write_to_file(handle, plr2List)
 
 if __name__ == "__main__":
     main()
