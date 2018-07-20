@@ -47,7 +47,7 @@ class FatTree:
 
 
     def expStressTest(self, demandList, results):
-        plrServList = []
+        percentPlrList = []
         plr1List = []
         plr2List = []
         SUList = []
@@ -61,10 +61,10 @@ class FatTree:
             # print('sum plrServers=%d, plr1=%.3f%%, plr2=%.3f%%' % (cntPlrServ, plr1*100.0, plr2*100.0))
             [_usedServersCnt, SU] = self.calcSU()
             SUList.append(SU)
-            plrServList.append(cntPlrServ)
+            percentPlrList.append(cntPlrServ/len(self.servers))
             plr1List.append(plr1)
             plr2List.append(plr2)
-        return [plrServList, plr1List, plr2List, SUList]
+        return [percentPlrList, plr1List, plr2List, SUList]
 
 
     def expDemand(self, result):
@@ -101,6 +101,16 @@ class FatTree:
                 leftMips = self.servers[int(no) - self.serverNoMin]
                 scores[no] = (leftMips - max(mips * exp, self.getScaleOfServers(int(no))))
         return scores
+
+    def useMips(self, mips, no):
+        self.servers[no-self.serverNoMin] -= mips
+
+
+    def givebackMips(self, mipsList, servList):
+        for i in range(len(servList)):
+            no = servList[i]
+            mips = mipsList[i]
+            self.servers[no-self.serverNoMin] += mips
 
 
     # 把vnf部署到服务器里，表现在消耗了对应服务器的mips

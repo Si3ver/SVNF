@@ -45,46 +45,45 @@ def rndp(handle, topo):
         dTrans = [dId, src, dst, exp, mipsList]
         # random place
         randomPlaceDemand(dTrans, topo)
-        if dId > 0:
-            break
     topo.display()
 
 def randomPlaceDemand(demand, topo):
     placeResultOfd = []
     [dId, src, dst, exp, mipsList] = demand
+    mipsList_bak = mipsList[:]
     serversList = topo.getAllServers()
     
     while len(mipsList) > 0:
-        if len(serversList) > 0:
+        if (len(serversList) > 0):
             mips = mipsList.pop(0)
             no = chooseServ(mips, exp, serversList, topo)
             if no != False:
-                placeResult.append(int(no))
-                del serversList
+                placeResultOfd.append(int(no))
+                del serversList[no]
             else:
                 serversList = {}
                 mipsList.insert(0, mips)
                 break
     #place
-    addtoResult(placeResultOfd, [dId, src, dst, exp, mipsList], topo)
+    addtoResult(placeResultOfd, [dId, src, dst, exp, mipsList_bak], topo)
 
 
 def chooseServ(mips, exp, serversList, topo):
-    ServersNoList = list(serversList.keys())
-    # print(ServersNoList)
-    while True:
+    rndNo = False
+    while len(serversList) > 0:
+        ServersNoList = list(serversList.keys())
         rndNo = random.choice(ServersNoList)
-        if topo.ifCanDeploy(mips, exp, int(rndNo)):
-            break
-        elif len(serversList) <= 0:
+        if topo.ifCanDeploy(mips, exp, int(rndNo)): # can deploy!
+            return rndNo
+        elif len(serversList) <= 0:                 # no servers
             return False
-        else:
+        else:                                       # continue
             del serversList[rndNo]
-    return rndNo
+    return False
     
 
-
 def addtoResult(resultOfd, demand, topo):
+    global placeResult
     [dId, src, dst, exp, mipsList] = demand
     sfcLen = len(mipsList)
     placeResult.append(str(dId)+DELIM+str(src)+DELIM+str(dst)+DELIM+str(exp)+DELIM+str(mipsList)+DELIM+str(resultOfd))
@@ -99,6 +98,7 @@ def write_to_file(handle, placeResult):
         handle.write("%s%s" % (str(placeResult[i]), NEWLINE))
 
 def main():
+    global placeResult
     args = parse_args(def_parser())
     random.seed(args['s'])
     topo = fattree.FatTree(args['k'])
@@ -106,9 +106,9 @@ def main():
     with open(args['i']) as handle:
         rndp(handle, topo)
     
-    # path = os.path.abspath(args['o'])
-    # with open(path, 'w') as handle:
-    #     write_to_file(handle, placeResult)
+    path = os.path.abspath(args['o'])
+    with open(path, 'w') as handle:
+        write_to_file(handle, placeResult)
 
 if __name__ == "__main__":
     main()

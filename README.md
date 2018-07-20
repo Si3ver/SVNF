@@ -72,7 +72,7 @@ serverNo 为对应vnf的所部署到的服务器编号，若为空，表示rejec
 
 ## 评估
 
-> 四个评价指标：PLR(packet loss rate)、SU(server utility)、FPL(flow path length)、AR(accept rate)
+> 四个评价指标：PLR(packet loss rate)、BSR(bad server rate)、SU(server utility)、FPL(flow path length)、AR(accept rate)
 
 当服务器mips超过其计算容量值时，将丢包。
 实验：依次随机选择一条流，让其流量从tr突变为peak。

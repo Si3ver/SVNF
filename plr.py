@@ -82,16 +82,22 @@ def main():
     expDemandList = list(range(args['c']))
     random.shuffle(expDemandList)
     # print(expDemandList)                              # 流放大顺序 dId列表
-    [_plrServList, plr1List, plr2List, SUList] = topo.expStressTest(expDemandList, results)
-
+    [percentPlrList, plr1List, plr2List, SUList] = topo.expStressTest(expDemandList, results)
+    
     path = os.path.abspath(args['o'])
     with open(path, 'w') as handle:
         write_to_file(handle, plr2List)
 
     # 序列化要作图的数据
+    dat0Path = 'pickleData/percentPlrList_'+path[-8:-4]+'.dat'
     dat1Path = 'pickleData/plr1List_'+path[-8:-4]+'.dat'
     dat2Path = 'pickleData/plr2List_'+path[-8:-4]+'.dat'
     dat3Path = 'pickleData/SUList_'+path[-8:-4]+'.dat'
+    
+    f = open(dat0Path, 'wb')
+    pickle.dump(percentPlrList, f)
+    f.close()
+
     f = open(dat1Path, 'wb')
     pickle.dump(plr1List, f)
     f.close()
