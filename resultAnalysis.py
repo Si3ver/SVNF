@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# 根据放置结果，计算流路径长度，把每条流的长度输出到文件analysis.txt
+# 根据放置结果，分析AR、FPL， analysis记录每条流的FPL。
 import sys, os.path, argparse, re, math
 import fattree
 
@@ -60,10 +60,10 @@ def doAnalysis(handle, topo, cntDemands):
             hopSumSD += topo.hops(int(d['src']), int(d['dst']))
             sfcLenSum += len(servList)-2
             analysisResult.append(str(dId) + DELIM + str(hop))
-    print("reject demands: %d" % (cntReject))
-    print("flow hops, SUM=%d, AVG=%f" % (hopSum, hopSum/(cntDemands)))
-    print("sfcLen, SUM=%d, AVG=%f" % (sfcLenSum, sfcLenSum/(cntDemands)))
-    print("src->dst hops, SUM=%d, AVG=%f" % (hopSumSD, hopSumSD/(cntDemands)))
+    print("reject demands=%d, Accept Rate=%.3f%%" % (cntReject, 100.0*(1-cntReject/cntDemands)))
+    print("flow hops, SUM=%d, AVG=%.3f" % (hopSum, hopSum/(cntDemands)))
+    print("sfcLen, SUM=%d, AVG=%.3f" % (sfcLenSum, sfcLenSum/(cntDemands)))
+    print("src->dst hops, SUM=%d, AVG FLP=%.3f" % (hopSumSD, hopSumSD/(cntDemands)))
     return 0
 
 def write_to_file(handle, placeResult):

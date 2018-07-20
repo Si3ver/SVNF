@@ -17,21 +17,22 @@ class FatTree:
         
     
     def display(self):
-        usedServers = []
-        # print(self.servers)
-        for i in range(self.cntServers):
-            if self.servers[i] < self.serverCapacity:
-                usedServers.append(i + self.serverNoMin)      
-        print('used servers: %d' % len(usedServers))
-        # 服务器资源利用率
-        sumUsedMips = 0
+        [usedServersCnt, SU] = self.calcSU()     
+        print('used servers=%d, AVG SU=%.3f%%' % (usedServersCnt, SU*100.0))
+
+    
+    def calcSU(self):
+        # 所有开启的服务器，其平均资源利用率
+        [sumUsedMips, cnt] = [0]*2
         for serv in self.servers:
             if serv < 0:
                 sumUsedMips += self.serverCapacity
-            else:
+                cnt += 1
+            elif serv < self.serverCapacity:
                 sumUsedMips += self.serverCapacity - serv
-        servUtility = sumUsedMips/(self.serverCapacity*self.cntServers)
-        print('sum utility: %.3f%%' % float(servUtility*100))
+                cnt += 1
+        servUtility = sumUsedMips/(self.serverCapacity*cnt)
+        return [cnt, servUtility]
 
     
     def calcplr(self):
@@ -49,17 +50,21 @@ class FatTree:
         plrServList = []
         plr1List = []
         plr2List = []
+        SUList = []
+
         for dId in demandList:
-            print(dId, len(results))
+            # print(dId, len(results))
             result = results[dId]
             self.expDemand(result)
-            self.display()
+            # self.display()
             [cntPlrServ, plr1, plr2] = self.calcplr()
-            print('sum plrServers=%d, plr1=%.3f%%, plr2=%.3f%%' % (cntPlrServ, plr1*100.0, plr2*100.0))
+            # print('sum plrServers=%d, plr1=%.3f%%, plr2=%.3f%%' % (cntPlrServ, plr1*100.0, plr2*100.0))
+            [_usedServersCnt, SU] = self.calcSU()
+            SUList.append(SU)
             plrServList.append(cntPlrServ)
             plr1List.append(plr1)
             plr2List.append(plr2)
-        return [plrServList, plr1List, plr2List]
+        return [plrServList, plr1List, plr2List, SUList]
 
 
     def expDemand(self, result):
@@ -219,7 +224,5 @@ class FatTree:
 
 if __name__ == "__main__":    
     topo = FatTree(20)
-    ser = topo.getServersOfSameTor(2160)
-    
-    print(ser)   
+    ser = topo.getServersOfSameTor(2160) 
     

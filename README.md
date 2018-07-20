@@ -1,4 +1,4 @@
-# Scalable Virtual Network Function Placement
+# Scalable Virtual Network Function Placement(SVNFP)
 
 ## 说明
 
@@ -36,7 +36,7 @@ python3 svnfp.py -k 20 -n
 + -i 指定读入文件名
 + -o 指定输出文件名
 
-3.分析结果，统计总流路径长度、平均流路径长度、接受率等
+3.分析结果，统计该放置方法的总FPL、AR值
 
 ```console
 python3 resultAnalysis.py -k 20 -i output/result.txt -o output/analysis.txt
@@ -72,6 +72,8 @@ serverNo 为对应vnf的所部署到的服务器编号，若为空，表示rejec
 
 ## 评估
 
+> 四个评价指标：PLR(packet loss rate)、SU(server utility)、FPL(flow path length)、AR(accept rate)
+
 当服务器mips超过其计算容量值时，将丢包。
 实验：依次随机选择一条流，让其流量从tr突变为peak。
 评估参数：
@@ -80,7 +82,7 @@ serverNo 为对应vnf的所部署到的服务器编号，若为空，表示rejec
 plr1 记录丢包服务器的平均丢包率。$plr = 总丢包率/cnt_ps$
 plr2 记录总的丢包率。$plr = 总丢包率/总服务器数量$
 
-1. 随着 tr -> peak的流数量增加，丢包率的变化情况。
+1.plr.py 负责重放结果，输出数据
 
 ```console
 python3 plr.py -c 1000 -k 20 -i ../output/result.txt -o ../output/plr.txt -s 10
@@ -94,7 +96,7 @@ python3 plr.py
 + -o 指定输出文件名
 + -s 指定随机数的起始随机种子
 
-2.画图
+2.draw.py负责画图
 
 ```console
 python3 draw.py
@@ -102,22 +104,29 @@ python3 draw.py
 
 ## 实验数据
 
-使用20-阶胖树拓扑，共有2000台服务器，每台服务器计算能力为100000mips。
-
-1.1000条流量
-
-```console
-python3 traffic.py -c 1000 -k 20 -Tm 10 -al 2.1 -s 10 -o output/traffic.txt
-python3 svnfp.py -k 20 -i output/traffic.txt -o output/result.txt -n
-python3 resultAnalysis.py -c 1000 -k 20 -i output/result.txt -o output/analysis.txt
-python3 plr.py -c 1000 -k 20 -i output/result.txt -o output/plr.txt -s 10
-```
-
-2.5000条流量
+使用20-阶胖树拓扑，5000条流量，共有2000台服务器，每台服务器计算能力为100000mips。
 
 ```console
 python3 traffic.py -c 5000 -k 20 -Tm 10 -al 2.1 -s 10 -o output/traffic.txt
-python3 svnfp.py -k 20 -i output/traffic.txt -o output/result.txt -n
-python3 resultAnalysis.py -c 5000 -k 20 -i output/result.txt -o output/analysis.txt
-python3 plr.py -c 5000 -k 20 -i output/result.txt -o output/plr.txt -s 10
+python3 svnfp.py -k 20 -i output/traffic.txt -o output/result_svnf.txt -n
+python3 resultAnalysis.py -c 5000 -k 20 -i output/result_svnf.txt -o output/analysis_svnf.txt
+python3 plr.py -c 5000 -k 20 -i output/result_svnf.txt -s 10 -o output/plr_svnf.txt
+```
+
+对比方案RNDP
+
+```console
+
+```
+
+对比方案CBP
+
+```console
+
+```
+
+统计结果
+
+```console
+python3 draw.py
 ```

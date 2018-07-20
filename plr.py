@@ -2,10 +2,8 @@
 # -*- coding: utf-8 -*-
 # 测量丢包率 packet loss rate
 import sys, os.path, argparse, re, math
-import random
+import random, pickle
 import fattree
-from nvd3 import lineChart
-import webbrowser
 
 DELIM 	= " "
 NEWLINE = "\n"
@@ -31,8 +29,7 @@ def def_parser():
     parser.add_argument('-n', '--no', dest='n', help='No id in request file',
                         action='store_true')
     parser.add_argument('-s', '--seed', dest='s', help='Random seed', type=int, default=10)
-    parser.add_argument('-d', '--draw', dest='d', help='Draw file name (default is index.html)',
-                        type=str, default='index.html')
+
     return parser
 
 def parse_args(parser):
@@ -71,13 +68,6 @@ def write_to_file(handle, placeResult):
     for i in range(0, len(placeResult)):
         handle.write("%s%s" % (str(placeResult[i]), NEWLINE))
 
-def draw_plr(handle, plrList):
-    x_data = range(0, len(plrList))
-    chart = lineChart(name="lineChart", width=1000, height=500)
-    chart.add_serie(y=plrList, x=x_data, name='packet loss rate')
-    chart.buildhtml()
-    handle.write(str(chart))
-
 def main():
     args = parse_args(def_parser())
     random.seed(args['s'])
@@ -92,15 +82,27 @@ def main():
     expDemandList = list(range(args['c']))
     random.shuffle(expDemandList)
     # print(expDemandList)                              # 流放大顺序 dId列表
-    [_plrServList, plr1List, plr2List] = topo.expStressTest(expDemandList, results)
-
-    path = os.path.abspath(args['d'])
-    with open(path, 'w') as handle:
-        draw_plr(handle, plr2List)
+    [_plrServList, plr1List, plr2List, SUList] = topo.expStressTest(expDemandList, results)
 
     path = os.path.abspath(args['o'])
     with open(path, 'w') as handle:
         write_to_file(handle, plr2List)
+
+    # 序列化要作图的数据
+    dat1Path = 'pickleData/plr1List_'+path[-8:-4]+'.dat'
+    dat2Path = 'pickleData/plr2List_'+path[-8:-4]+'.dat'
+    dat3Path = 'pickleData/SUList_'+path[-8:-4]+'.dat'
+    f = open(dat1Path, 'wb')
+    pickle.dump(plr1List, f)
+    f.close()
+
+    f = open(dat2Path, 'wb')
+    pickle.dump(plr2List, f)
+    f.close()
+
+    f = open(dat3Path, 'wb')
+    pickle.dump(SUList, f)
+    f.close()
 
 if __name__ == "__main__":
     main()
