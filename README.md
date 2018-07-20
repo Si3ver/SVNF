@@ -124,3 +124,20 @@ python3 plr.py -c 5000 -k 20 -i output/result_clbp.txt -s 10 -o output/plr_clbp.
 # 绘图
 python3 draw.py
 ```
+
+## 结果对比
+
+| 算法 | AR | FLP（跳数） |
+| --- | --- | --- |
+| SVNFP | 99.8% | 5.874 |
+| RNDP | 99.92% | 37.796 |
+| CLBP | 95.86% | 6.574 |
+
+SU
+![SU](/results/SU.png)
+
+BSR
+![BSR](/results/SU.png)
+
+PLR
+![PLR](/results/SU.png)
