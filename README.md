@@ -114,7 +114,7 @@ python3 svnfp.py -k 20 -i output/traffic.txt -o output/result_svnf.txt -n
 python3 resultAnalysis.py -c 5000 -k 20 -i output/result_svnf.txt -o output/analysis_svnf.txt
 python3 plr.py -c 5000 -k 20 -i output/result_svnf.txt -s 10 -o output/plr_svnf.txt
 # 对比方案RNDP
-python3 rndp.py -k 20 -i output/traffic.txt -o output/result_rndp.txt -n
+python3 rndp.py -k 20 -i output/traffic.txt -o output/result_rndp.txt -s 20 -n
 python3 resultAnalysis.py -c 5000 -k 20 -i output/result_rndp.txt -o output/analysis_rndp.txt
 python3 plr.py -c 5000 -k 20 -i output/result_rndp.txt -s 10 -o output/plr_rndp.txt
 # 对比方案CLBP

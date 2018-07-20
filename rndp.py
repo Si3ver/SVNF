@@ -17,6 +17,7 @@ def def_parser():
                         type=str, default='output/traffic.txt')
     parser.add_argument('-o', '--output', dest='o', help='place results file name (default is output/result_rndp.txt)',
                         type=str, default='output/result_rndp.txt')
+    parser.add_argument('-s', '--seed', dest='s', help='Random seed', type=int, default=20)
     parser.add_argument('-n', '--no', dest='n', help='No id in request file',
                         action='store_true')
     return parser
@@ -44,12 +45,44 @@ def rndp(handle, topo):
         dTrans = [dId, src, dst, exp, mipsList]
         # random place
         randomPlaceDemand(dTrans, topo)
+        if dId > 0:
+            break
     topo.display()
 
 def randomPlaceDemand(demand, topo):
+    placeResultOfd = []
     [dId, src, dst, exp, mipsList] = demand
-    for mips in mipsList:
-        pass
+    serversList = topo.getAllServers()
+    
+    while len(mipsList) > 0:
+        if len(serversList) > 0:
+            mips = mipsList.pop(0)
+            no = chooseServ(mips, exp, serversList, topo)
+            if no != False:
+                placeResult.append(int(no))
+                del serversList
+            else:
+                serversList = {}
+                mipsList.insert(0, mips)
+                break
+    #place
+    addtoResult(placeResultOfd, [dId, src, dst, exp, mipsList], topo)
+
+
+def chooseServ(mips, exp, serversList, topo):
+    ServersNoList = list(serversList.keys())
+    # print(ServersNoList)
+    while True:
+        rndNo = random.choice(ServersNoList)
+        if topo.ifCanDeploy(mips, exp, int(rndNo)):
+            break
+        elif len(serversList) <= 0:
+            return False
+        else:
+            del serversList[rndNo]
+    return rndNo
+    
+
 
 def addtoResult(resultOfd, demand, topo):
     [dId, src, dst, exp, mipsList] = demand
@@ -67,6 +100,7 @@ def write_to_file(handle, placeResult):
 
 def main():
     args = parse_args(def_parser())
+    random.seed(args['s'])
     topo = fattree.FatTree(args['k'])
 
     with open(args['i']) as handle:

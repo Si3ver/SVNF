@@ -111,6 +111,15 @@ class FatTree:
             self.scaleOfServers[no - self.serverNoMin] = mips*(exp-1)
         
 
+    def getAllServers(self):
+        servList = {}
+        start = self.serverNoMin
+        end = self.serverNoMax
+        for no in range(start, end+1):
+            servList[str(no)] = self.servers[no - self.serverNoMin]
+        return servList
+
+
     def getServersOfSameTor(self, no):
         [pod, tor, _host] = self.parsePos(no)
         start = self.calcServNo(pod, tor, 0)            # 服务器编号 -- 起点
