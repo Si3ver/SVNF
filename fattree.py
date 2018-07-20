@@ -31,7 +31,7 @@ class FatTree:
             elif serv < self.serverCapacity:
                 sumUsedMips += self.serverCapacity - serv
                 cnt += 1
-        servUtility = sumUsedMips/(self.serverCapacity*cnt)
+        servUtility = sumUsedMips/(self.serverCapacity*cnt) if cnt != 0 else 0
         return [cnt, servUtility]
 
     
