@@ -137,7 +137,7 @@ SU
 ![SU](/results/SU.png)
 
 BSR
-![BSR](/results/SU.png)
+![BSR](/results/BSR.png)
 
 PLR
-![PLR](/results/SU.png)
+![PLR](/results/PLR.png)
