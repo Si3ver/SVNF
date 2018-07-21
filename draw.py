@@ -12,7 +12,7 @@ def draw_plrs(plrList_svnf, plrList_rndp, plrList_clbp):
     plrList_clbp = list(map(lambda x:x*100, plrList_clbp))
 
     x_data = list(range(len(plrList_svnf)))
-    plt.plot(x_data, plrList_svnf, 'r-', label='SVNF')
+    plt.plot(x_data, plrList_svnf, 'r-', label='SVNFP')
     plt.plot(x_data, plrList_rndp, 'b--', label='RNDP')
     plt.plot(x_data, plrList_clbp, 'g--', label='CLBP')
     plt.xlabel('quantity of peak traffics')
@@ -27,7 +27,7 @@ def draw_bsr(bsrList_svnf, bsrList_rndp, bsrList_clbp):
     bsrList_clbp = list(map(lambda x:x*100, bsrList_clbp))
 
     x_data = list(range(len(bsrList_svnf)))
-    plt.plot(x_data, bsrList_svnf, 'r-', label='SVNF')
+    plt.plot(x_data, bsrList_svnf, 'r-', label='SVNFP')
     plt.plot(x_data, bsrList_rndp, 'b--', label='RNDP')
     plt.plot(x_data, bsrList_clbp, 'g--', label='CLBP')
     plt.xlabel('quantity of peak traffics')
@@ -42,7 +42,7 @@ def draw_SU(SUList_svnf, SUList_rndp, SUList_clbp):
     SUList_rndp = list(map(lambda x:x*100, SUList_rndp))
     SUList_clbp = list(map(lambda x:x*100, SUList_clbp))
 
-    plt.plot(x_data, SUList_svnf, 'r-', label='SVNF')
+    plt.plot(x_data, SUList_svnf, 'r-', label='SVNFP')
     plt.plot(x_data, SUList_rndp, 'b--', label='RNDP')
     plt.plot(x_data, SUList_clbp, 'g--', label='CLBP')
     plt.xlabel('quantity of peak traffics')

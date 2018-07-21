@@ -127,17 +127,30 @@ python3 draw.py
 
 ## 结果对比
 
+### 1. k=20, c = 5000
+
 | 算法 | AR | FLP（跳数） |
 | --- | --- | --- |
 | SVNFP | 99.8% | 5.874 |
 | RNDP | 99.92% | 37.796 |
 | CLBP | 95.86% | 6.574 |
 
-SU
 ![SU](/results/SU.png)
 
-BSR
 ![BSR](/results/BSR.png)
 
-PLR
 ![PLR](/results/PLR.png)
+
+### 2. k=20, c = 10000
+
+| 算法 | AR | FLP（跳数） |
+| --- | --- | --- |
+| SVNFP | 70.063% | 16.274 |
+| RNDP | 54.52% | 37.796 |
+| CLBP | 64.57% | 4.646 |
+
+![SU](/results/SU2.png)
+
+![BSR](/results/BSR2.png)
+
+![PLR](/results/PLR2.png)

@@ -45,8 +45,6 @@ def clbp(handle, topo):
         dTrans = [dId, src, dst, exp, mipsList]
         # cluster based place
         clbPlaceDemand(dTrans, topo)
-        if dId >= 4999:
-            break
     topo.display()
 
 def clbPlaceDemand(demand, topo):
@@ -66,8 +64,6 @@ def clbPlaceDemand(demand, topo):
     # 2. sameTor
     serversList = topo.getServersOfSameTor(src)
     serversNoList = list(map(int, serversList.keys()))
-    if dId == 2148:
-        print(dId,serversList)
     while len(mipsList) > 0 and len(serversList) > 0:
         mips = mipsList.pop(0) 
         while len(serversNoList) > 0:
@@ -115,6 +111,7 @@ def clbPlaceDemand(demand, topo):
     if len(placeResultOfd) < sfcLen:
         placeResultOfd = []
     #place
+    # print(dId, placeResultOfd)
     addtoResult(placeResultOfd, [dId, src, dst, exp, mipsList_bak], topo)
 
 
