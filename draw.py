@@ -6,96 +6,97 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 
-def draw_plrs(plrList_svnf, plrList_rndp, plrList_clbp):
-    plrList_svnf = list(map(lambda x:x*100, plrList_svnf))
-    plrList_rndp = list(map(lambda x:x*100, plrList_rndp))
-    plrList_clbp = list(map(lambda x:x*100, plrList_clbp))
+def draw_plrs(plrList, dNum, algNum):
+    x_data = []
+    for i in range(dNum):
+        for j in range(algNum):
+            plrList[i*dNum + j] = list(map(lambda x:x*100, plrList[i*algNum + j]))
+        x_data.append(list(range(len(plrList[i*dNum]))))
 
-    x_data = list(range(len(plrList_svnf)))
-    plt.plot(x_data, plrList_svnf, 'r-', label='SVNFP')
-    plt.plot(x_data, plrList_rndp, 'b--', label='RNDP')
-    plt.plot(x_data, plrList_clbp, 'g--', label='CLBP')
-    plt.xlabel('quantity of peak traffics')
-    plt.ylabel('packet loss rate(%)')
-    plt.title('PLR')
-    plt.legend()
+    lineTypes = ['r-', 'b--', 'g--']
+    algs = ['SVNF', 'RNDP', 'CLBP']
+    plt.figure(figsize=(15,5))
+    for i in range(dNum):
+        plt.subplot(1,3,i+1)
+        for j in range(algNum):
+            plt.plot(x_data[i], plrList[i*dNum + j], lineTypes[j], label=algs[j],)
+        plt.xlabel('quantity of peak traffics')
+        plt.ylabel('packet loss rate(%)')
+        plt.title('PLR')
+        plt.legend()
     plt.show()
 
-def draw_bsr(bsrList_svnf, bsrList_rndp, bsrList_clbp):
-    bsrList_svnf = list(map(lambda x:x*100, bsrList_svnf))
-    bsrList_rndp = list(map(lambda x:x*100, bsrList_rndp))
-    bsrList_clbp = list(map(lambda x:x*100, bsrList_clbp))
+def draw_bsrs(bsrList, dNum, algNum):
+    x_data = []
+    for i in range(dNum):
+        for j in range(algNum):
+            bsrList[i*dNum + j] = list(map(lambda x:x*100, bsrList[i*algNum + j]))
+        x_data.append(list(range(len(bsrList[i*dNum]))))
 
-    x_data = list(range(len(bsrList_svnf)))
-    plt.plot(x_data, bsrList_svnf, 'r-', label='SVNFP')
-    plt.plot(x_data, bsrList_rndp, 'b--', label='RNDP')
-    plt.plot(x_data, bsrList_clbp, 'g--', label='CLBP')
-    plt.xlabel('quantity of peak traffics')
-    plt.ylabel('bad server rate(%)')
-    plt.title('BSR')
-    plt.legend()
+    lineTypes = ['r-', 'b--', 'g--']
+    algs = ['SVNF', 'RNDP', 'CLBP']
+    plt.figure(figsize=(15,5))
+    for i in range(dNum):
+        plt.subplot(1,3,i+1)
+        for j in range(algNum):
+            plt.plot(x_data[i], bsrList[i*dNum + j], lineTypes[j], label=algs[j],)
+        plt.xlabel('quantity of peak traffics')
+        plt.ylabel('bad server rate(%)')
+        plt.title('BSR')
+        plt.legend()
     plt.show()
 
-def draw_SU(SUList_svnf, SUList_rndp, SUList_clbp):
-    x_data = list(range(len(SUList_svnf)))
-    SUList_svnf = list(map(lambda x:x*100, SUList_svnf))
-    SUList_rndp = list(map(lambda x:x*100, SUList_rndp))
-    SUList_clbp = list(map(lambda x:x*100, SUList_clbp))
+def draw_sus(suList, dNum, algNum):
+    x_data = []
+    for i in range(dNum):
+        for j in range(algNum):
+            suList[i*dNum + j] = list(map(lambda x:x*100, suList[i*algNum + j]))
+        x_data.append(list(range(len(suList[i*dNum]))))
 
-    plt.plot(x_data, SUList_svnf, 'r-', label='SVNFP')
-    plt.plot(x_data, SUList_rndp, 'b--', label='RNDP')
-    plt.plot(x_data, SUList_clbp, 'g--', label='CLBP')
-    plt.xlabel('quantity of peak traffics')
-    plt.ylabel('Servers Utility(%)')
-    plt.title('SU')
-    plt.legend()
+    lineTypes = ['r-', 'b--', 'g--']
+    algs = ['SVNF', 'RNDP', 'CLBP']
+    plt.figure(figsize=(15,5))
+    for i in range(dNum):
+        plt.subplot(1,3,i+1)
+        for j in range(algNum):
+            plt.plot(x_data[i], suList[i*dNum + j], lineTypes[j], label=algs[j],)
+        plt.xlabel('quantity of peak traffics')
+        plt.ylabel('Servers Utility(%)')
+        plt.title('SU')
+        plt.legend()
     plt.show()
 
 
 def main():
-    # f = open('pickleData/plr1List_svnf.dat', 'rb')
-    # plr1List_svnf = pickle.load(f)
-    # f.close()
-    # f = open('pickleData/plr1List_rndp.dat', 'rb')
-    # plr1List_rndp = pickle.load(f)
-    # f.close()
-    # draw_plrs(plr1List_svnf, plr1List_rndp)
+    algList = ['svnf', 'rndp', 'clbp']
+    dNumList = [1000, 5000, 10000]
 
-    # plr
-    f = open('pickleData/plr2List_svnf.dat', 'rb')
-    plr2List_svnf = pickle.load(f)
-    f.close()
-    f = open('pickleData/plr2List_rndp.dat', 'rb')
-    plr2List_rndp = pickle.load(f)
-    f.close()
-    f = open('pickleData/plr2List_clbp.dat', 'rb')
-    plr2List_clbp = pickle.load(f)
-    f.close()
-    draw_plrs(plr2List_svnf, plr2List_rndp, plr2List_clbp)
+    plr2List = []
+    for dNum in dNumList:
+        for alg in algList:
+            path = 'pickleData/plr2List_' + alg + str(dNum) + '.dat'
+            f = open(path, 'rb')
+            plr2List.append(pickle.load(f))
+            f.close()
+    draw_plrs(plr2List, len(dNumList), len(algList))
 
-    # bsr
-    f = open('pickleData/percentPlrList_svnf.dat', 'rb')
-    percentPlrList_svnf = pickle.load(f)
-    f.close()
-    f = open('pickleData/percentPlrList_rndp.dat', 'rb')
-    percentPlrList_rndp = pickle.load(f)
-    f.close()
-    f = open('pickleData/percentPlrList_clbp.dat', 'rb')
-    percentPlrList_clbp = pickle.load(f)
-    f.close()    
-    draw_bsr(percentPlrList_svnf, percentPlrList_rndp, percentPlrList_clbp)
+    bsrList = []
+    for dNum in dNumList:
+        for alg in algList:
+            path = 'pickleData/percentPlrList_' + alg + str(dNum) + '.dat'
+            f = open(path, 'rb')
+            bsrList.append(pickle.load(f))
+            f.close()
+    draw_bsrs(bsrList, len(dNumList), len(algList))
 
-    # SU
-    f = open('pickleData/SUList_svnf.dat', 'rb')
-    SUList_svnf = pickle.load(f)
-    f.close()
-    f = open('pickleData/SUList_rndp.dat', 'rb')
-    SUList_rndp = pickle.load(f)
-    f.close()
-    f = open('pickleData/SUList_clbp.dat', 'rb')
-    SUList_clbp = pickle.load(f)
-    f.close()    
-    draw_SU(SUList_svnf, SUList_rndp, SUList_clbp)
+    suList = []
+    for dNum in dNumList:
+        for alg in algList:
+            path = 'pickleData/SUList_' + alg + str(dNum) + '.dat'
+            f = open(path, 'rb')
+            suList.append(pickle.load(f))
+            f.close()
+    draw_sus(suList, len(dNumList), len(algList))
 
 
 if __name__ == "__main__":

@@ -106,7 +106,9 @@ python3 draw.py
 
 使用20-阶胖树拓扑，5000条流量，共有2000台服务器，每台服务器计算能力为100000mips。
 
-```console
+```shell
+#!/bin/sh
+# --- k=20 c=5000 ---
 # 生成流量
 python3 traffic.py -c 5000 -k 20 -Tm 10 -al 2.1 -s 10 -o output/traffic.txt
 # 我的方案SVNFP
@@ -121,36 +123,70 @@ python3 plr.py -c 5000 -k 20 -i output/result_rndp.txt -s 10 -o output/plr_rndp.
 python3 clbp.py -k 20 -i output/traffic.txt -o output/result_clbp.txt -n
 python3 resultAnalysis.py -c 5000 -k 20 -i output/result_clbp.txt -o output/analysis_clbp.txt
 python3 plr.py -c 5000 -k 20 -i output/result_clbp.txt -s 10 -o output/plr_clbp.txt
+# --- k=20 c=1000 ---
+# 生成流量
+python3 traffic.py -c 1000 -k 20 -Tm 10 -al 2.1 -s 10 -o output2/traffic.txt
+# 我的方案SVNFP
+python3 svnfp.py -k 20 -i output2/traffic.txt -o output2/result_svnf.txt -n
+python3 resultAnalysis.py -c 1000 -k 20 -i output2/result_svnf.txt -o output2/analysis_svnf.txt
+python3 plr.py -c 1000 -k 20 -i output2/result_svnf.txt -s 10 -o output2/plr_svnf.txt
+# 对比方案RNDP
+python3 rndp.py -k 20 -i output2/traffic.txt -o output2/result_rndp.txt -s 20 -n
+python3 resultAnalysis.py -c 1000 -k 20 -i output2/result_rndp.txt -o output2/analysis_rndp.txt
+python3 plr.py -c 1000 -k 20 -i output2/result_rndp.txt -s 10 -o output2/plr_rndp.txt
+# 对比方案CLBP
+python3 clbp.py -k 20 -i output2/traffic.txt -o output2/result_clbp.txt -n
+python3 resultAnalysis.py -c 1000 -k 20 -i output2/result_clbp.txt -o output2/analysis_clbp.txt
+python3 plr.py -c 1000 -k 20 -i output2/result_clbp.txt -s 10 -o output2/plr_clbp.txt
+# --- k=20 c=10000 ---
+# 生成流量
+python3 traffic.py -c 10000 -k 20 -Tm 10 -al 2.1 -s 10 -o output2/traffic.txt
+# 我的方案SVNFP
+python3 svnfp.py -k 20 -i output2/traffic.txt -o output2/result_svnf.txt -n
+python3 resultAnalysis.py -c 10000 -k 20 -i output2/result_svnf.txt -o output2/analysis_svnf.txt
+python3 plr.py -c 10000 -k 20 -i output2/result_svnf.txt -s 10 -o output2/plr_svnf.txt
+# 对比方案RNDP
+python3 rndp.py -k 20 -i output2/traffic.txt -o output2/result_rndp.txt -s 20 -n
+python3 resultAnalysis.py -c 10000 -k 20 -i output2/result_rndp.txt -o output2/analysis_rndp.txt
+python3 plr.py -c 10000 -k 20 -i output2/result_rndp.txt -s 10 -o output2/plr_rndp.txt
+# 对比方案CLBP
+python3 clbp.py -k 20 -i output2/traffic.txt -o output2/result_clbp.txt -n
+python3 resultAnalysis.py -c 10000 -k 20 -i output2/result_clbp.txt -o output2/analysis_clbp.txt
+python3 plr.py -c 10000 -k 20 -i output2/result_clbp.txt -s 10 -o output2/plr_clbp.txt
 # 绘图
 python3 draw.py
 ```
 
 ## 结果对比
 
-### 1. k=20, c = 5000
+### 1. k=20, c = 1000
 
 | 算法 | AR | FLP（跳数） |
 | --- | --- | --- |
-| SVNFP | 99.8% | 5.874 |
+| SVNFP | 100% | 12.846 |
+| RNDP | 100% | 37.648 |
+| CLBP | 100% | 6.166 |
+
+### 2. k=20, c = 5000
+
+| 算法 | AR | FLP（跳数） |
+| --- | --- | --- |
+| SVNFP | 99.8% | 13.380 |
 | RNDP | 99.92% | 37.796 |
 | CLBP | 95.86% | 6.574 |
 
-![SU](/results/SU.png)
-
-![BSR](/results/BSR.png)
-
-![PLR](/results/PLR.png)
-
-### 2. k=20, c = 10000
+### 3. k=20, c = 10000
 
 | 算法 | AR | FLP（跳数） |
 | --- | --- | --- |
-| SVNFP | 70.063% | 16.274 |
-| RNDP | 54.52% | 37.796 |
+| SVNFP | 57.55% | 8.137 |
+| RNDP | 54.52% | 20.164 |
 | CLBP | 64.57% | 4.646 |
 
-![SU](/results/SU2.png)
+### 折线图
 
-![BSR](/results/BSR2.png)
+![PLR](/results/PLR.png)
 
-![PLR](/results/PLR2.png)
+![BSR](/results/BSR.png)
+
+![SU](/results/SU.png)
