@@ -8,9 +8,9 @@
 
 ## 依赖库
 
-请安装python3、argparse、numpy、matplotlib等依赖库，推荐用pip3安装。
+请安装python3、argparse、numpy、matplotlib等依赖库，推荐用pip3安装，并安装anaconda工具。
 
-## 运行说明
+## 使用说明
 
 1.生成流量
 
@@ -72,10 +72,10 @@ serverNo 为对应vnf的所部署到的服务器编号，若为空，表示rejec
 
 ## 评估
 
-> 四个评价指标：PLR(packet loss rate)、BSR(bad server rate)、SU(server utility)、FPL(flow path length)、AR(accept rate)
+> 五个评价指标：PLR(packet loss rate)、BSR(bad server rate)、SU(server utility)、FPL(flow path length)、AR(accept rate)
 
 当服务器mips超过其计算容量值时，将丢包。
-实验：依次随机选择一条流，让其流量从tr突变为peak。
+实验情景：依次随机选择一条流，让其流量从tr突变为peak。
 评估参数：
 1.sum plrServers记录存在丢包情况的服务器数量。$cnt_ps$
 2.单台服务器丢包率 $plr_k = 超出mips/其计算容量$
@@ -110,19 +110,19 @@ python3 draw.py
 #!/bin/sh
 # --- k=20 c=5000 ---
 # 生成流量
-python3 traffic.py -c 5000 -k 20 -Tm 10 -al 2.1 -s 10 -o output/traffic.txt
+python3 traffic.py -c 5000 -k 20 -Tm 10 -al 2.1 -s 10 -o output1/traffic.txt
 # 我的方案SVNFP
-python3 svnfp.py -k 20 -i output/traffic.txt -o output/result_svnf.txt -n
-python3 resultAnalysis.py -c 5000 -k 20 -i output/result_svnf.txt -o output/analysis_svnf.txt
-python3 plr.py -c 5000 -k 20 -i output/result_svnf.txt -s 10 -o output/plr_svnf.txt
+python3 svnfp.py -k 20 -i output1/traffic.txt -o output1/result_svnf.txt -n
+python3 resultAnalysis.py -c 5000 -k 20 -i output1/result_svnf.txt -o output1/analysis_svnf.txt
+python3 plr.py -c 5000 -k 20 -i output1/result_svnf.txt -s 10 -o output1/plr_svnf.txt
 # 对比方案RNDP
-python3 rndp.py -k 20 -i output/traffic.txt -o output/result_rndp.txt -s 20 -n
-python3 resultAnalysis.py -c 5000 -k 20 -i output/result_rndp.txt -o output/analysis_rndp.txt
-python3 plr.py -c 5000 -k 20 -i output/result_rndp.txt -s 10 -o output/plr_rndp.txt
+python3 rndp.py -k 20 -i output1/traffic.txt -o output1/result_rndp.txt -s 20 -n
+python3 resultAnalysis.py -c 5000 -k 20 -i output1/result_rndp.txt -o output1/analysis_rndp.txt
+python3 plr.py -c 5000 -k 20 -i output1/result_rndp.txt -s 10 -o output1/plr_rndp.txt
 # 对比方案CLBP
-python3 clbp.py -k 20 -i output/traffic.txt -o output/result_clbp.txt -n
-python3 resultAnalysis.py -c 5000 -k 20 -i output/result_clbp.txt -o output/analysis_clbp.txt
-python3 plr.py -c 5000 -k 20 -i output/result_clbp.txt -s 10 -o output/plr_clbp.txt
+python3 clbp.py -k 20 -i output1/traffic.txt -o output1/result_clbp.txt -n
+python3 resultAnalysis.py -c 5000 -k 20 -i output1/result_clbp.txt -o output1/analysis_clbp.txt
+python3 plr.py -c 5000 -k 20 -i output1/result_clbp.txt -s 10 -o output1/plr_clbp.txt
 # --- k=20 c=1000 ---
 # 生成流量
 python3 traffic.py -c 1000 -k 20 -Tm 10 -al 2.1 -s 10 -o output2/traffic.txt
@@ -140,24 +140,24 @@ python3 resultAnalysis.py -c 1000 -k 20 -i output2/result_clbp.txt -o output2/an
 python3 plr.py -c 1000 -k 20 -i output2/result_clbp.txt -s 10 -o output2/plr_clbp.txt
 # --- k=20 c=10000 ---
 # 生成流量
-python3 traffic.py -c 10000 -k 20 -Tm 10 -al 2.1 -s 10 -o output2/traffic.txt
+python3 traffic.py -c 10000 -k 20 -Tm 10 -al 2.1 -s 10 -o output3/traffic.txt
 # 我的方案SVNFP
-python3 svnfp.py -k 20 -i output2/traffic.txt -o output2/result_svnf.txt -n
-python3 resultAnalysis.py -c 10000 -k 20 -i output2/result_svnf.txt -o output2/analysis_svnf.txt
-python3 plr.py -c 10000 -k 20 -i output2/result_svnf.txt -s 10 -o output2/plr_svnf.txt
+python3 svnfp.py -k 20 -i output3/traffic.txt -o output3/result_svnf.txt -n
+python3 resultAnalysis.py -c 10000 -k 20 -i output3/result_svnf.txt -o output3/analysis_svnf.txt
+python3 plr.py -c 10000 -k 20 -i output3/result_svnf.txt -s 10 -o output3/plr_svnf.txt
 # 对比方案RNDP
-python3 rndp.py -k 20 -i output2/traffic.txt -o output2/result_rndp.txt -s 20 -n
-python3 resultAnalysis.py -c 10000 -k 20 -i output2/result_rndp.txt -o output2/analysis_rndp.txt
-python3 plr.py -c 10000 -k 20 -i output2/result_rndp.txt -s 10 -o output2/plr_rndp.txt
+python3 rndp.py -k 20 -i output3/traffic.txt -o output3/result_rndp.txt -s 20 -n
+python3 resultAnalysis.py -c 10000 -k 20 -i output3/result_rndp.txt -o output3/analysis_rndp.txt
+python3 plr.py -c 10000 -k 20 -i output3/result_rndp.txt -s 10 -o output3/plr_rndp.txt
 # 对比方案CLBP
-python3 clbp.py -k 20 -i output2/traffic.txt -o output2/result_clbp.txt -n
-python3 resultAnalysis.py -c 10000 -k 20 -i output2/result_clbp.txt -o output2/analysis_clbp.txt
-python3 plr.py -c 10000 -k 20 -i output2/result_clbp.txt -s 10 -o output2/plr_clbp.txt
+python3 clbp.py -k 20 -i output3/traffic.txt -o output3/result_clbp.txt -n
+python3 resultAnalysis.py -c 10000 -k 20 -i output3/result_clbp.txt -o output3/analysis_clbp.txt
+python3 plr.py -c 10000 -k 20 -i output3/result_clbp.txt -s 10 -o output3/plr_clbp.txt
 # 绘图
 python3 draw.py
 ```
 
-## 结果对比
+## 实验结果
 
 ### 1. k=20, c = 1000
 
