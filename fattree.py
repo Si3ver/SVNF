@@ -5,22 +5,26 @@ import argparse
 
 class FatTree:
     def __init__(self, k):
-        self.serverCapacity = 100000                            # 一台服务器默认 100000mips 计算能力
+        self.serverCapacity = 100000                                # 一台服务器默认 100000mips 计算能力
         self.k = int(k)
         self.cntServers = int(k**3/4)
-        self.serverNoMin = int(5*k**2/4)                        # 服务器最小编号值
+        self.serverNoMin = int(5*k**2/4)                            # 服务器最小编号值
         self.serverNoMax = self.serverNoMin + self.cntServers - 1   # 服务器最大编号值
         self.servers = [self.serverCapacity]*self.cntServers        # 记录服务器剩余的mips值，共k**3/4台服务器
-        self.demandsInServers = [[0]]*self.cntServers # 记录服务器经过的demands id
-        self.scaleOfServers = [0]*self.cntServers # 需要满足 任意一条流增大到exp，服务器能Vertical scaling!!!
-        self.plrServerList = {}                                  # 记录丢包的服务器 key:serNo value:plr
+        self.demandsInServers = [[]]*self.cntServers                # 记录服务器经过的demands id
+        self.scaleOfServers = [0]*self.cntServers                   # 需要满足 任意一条流增大到exp，服务器能Vertical scaling!!!
+        self.plrServerList = {}                                     # 记录丢包的服务器 key:serNo value:plr
         
+        self.peakSum = [0]*self.cntServers                          # 总共已放入的peak值之和
     
     def display(self):
         [usedServersCnt, SU] = self.calcSU()     
         print('used servers=%d, AVG SU=%.3f%%' % (usedServersCnt, SU*100.0))
 
     
+    def serverLeftMips(self, no):
+        return self.servers[no-self.serverNoMin]
+
     def calcSU(self):
         # 所有开启的服务器，其平均资源利用率
         [sumUsedMips, cnt] = [0]*2
@@ -44,6 +48,10 @@ class FatTree:
         if cnt == 0:
             return [0, 0, 0]
         return [cnt, sumPlr/cnt, sumPlr/self.cntServers]
+
+
+    def transfertoNo(self, idx):
+        return idx + self.serverNoMin
 
 
     def expStressTest(self, demandList, results):
@@ -76,7 +84,7 @@ class FatTree:
             
             # 检测是否丢包
             if self.servers[servNo - self.serverNoMin] < 0:
-                self.plrServerList[servNo] = (0 - self.servers[servNo - self.serverNoMin])/self.serverCapacity
+                self.plrServerList[servNo] = (0 - self.servers[servNo - self.serverNoMin])/(self.serverCapacity-self.servers[servNo - self.serverNoMin])
 
 
     def getScaleOfServers(self, no):
@@ -90,6 +98,13 @@ class FatTree:
             return True
         return False
 
+
+    # 所有流量都扩张，还能放下
+    def ifCanCompleteDeploy(self, mips, exp, no):
+        leftMips = self.servers[no - self.serverNoMin]
+        if leftMips > mips * exp + self.peakSum[no-self.serverNoMin]:
+            return True
+        return False
 
     # 评分
     def scoredServers(self, mips, exp, serversList):
@@ -119,7 +134,7 @@ class FatTree:
         self.demandsInServers[no - self.serverNoMin].append(dId)
         if mips*(exp-1) > self.scaleOfServers[no - self.serverNoMin]:
             self.scaleOfServers[no - self.serverNoMin] = mips*(exp-1)
-        
+        self.peakSum[no-self.serverNoMin] += mips*(exp-1)
 
     def getAllServers(self):
         servList = {}

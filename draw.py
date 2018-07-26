@@ -14,7 +14,7 @@ def draw_plrs(plrList, dNum, algNum):
         x_data.append(list(range(len(plrList[i*dNum]))))
 
     lineTypes = ['r-', 'b--', 'g--']
-    algs = ['SVNF', 'RNDP', 'CLBP']
+    algs = ['SVNF', 'MVSH', 'CLBP']
     plt.figure(figsize=(15,5))
     for i in range(dNum):
         plt.subplot(1,3,i+1)
@@ -34,7 +34,7 @@ def draw_bsrs(bsrList, dNum, algNum):
         x_data.append(list(range(len(bsrList[i*dNum]))))
 
     lineTypes = ['r-', 'b--', 'g--']
-    algs = ['SVNF', 'RNDP', 'CLBP']
+    algs = ['SVNF', 'MVSH', 'CLBP']
     plt.figure(figsize=(15,5))
     for i in range(dNum):
         plt.subplot(1,3,i+1)
@@ -54,7 +54,7 @@ def draw_sus(suList, dNum, algNum):
         x_data.append(list(range(len(suList[i*dNum]))))
 
     lineTypes = ['r-', 'b--', 'g--']
-    algs = ['SVNF', 'RNDP', 'CLBP']
+    algs = ['SVNF', 'MVSH', 'CLBP']
     plt.figure(figsize=(15,5))
     for i in range(dNum):
         plt.subplot(1,3,i+1)
@@ -68,7 +68,7 @@ def draw_sus(suList, dNum, algNum):
 
 
 def main():
-    algList = ['svnf', 'rndp', 'clbp']
+    algList = ['svnf', 'mvsh', 'clbp']
     dNumList = [1000, 5000, 10000]
 
     plr2List = []
