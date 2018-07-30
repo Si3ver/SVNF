@@ -48,8 +48,8 @@ from scipy.optimize import linear_sum_assignment
 #                 [4, np.inf, np.inf],
 #                 [np.inf, 4, np.inf]])
 cost =np.array([[1, 0, 4],
-                [4, 0, 0],
-                [np.inf, 4, 1]])
+                [4, 1, 0],
+                [4, 4, 2]])
 
 row_ind,col_ind=linear_sum_assignment(cost)
 print(row_ind)#开销矩阵对应的行索引

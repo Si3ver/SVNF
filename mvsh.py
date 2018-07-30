@@ -55,8 +55,6 @@ def mvshPlaceDemand(demand, topo):
     placeResultOfd = []
     [dId, src, dst, exp, mipsList] = demand
     mipsList_bak = mipsList[:]
-
-
     serversList = topo.getAllServers()
     serversNoList = list(serversList.keys())
     
@@ -76,15 +74,13 @@ def mvshPlaceDemand(demand, topo):
 
     row_ind,col_ind = linear_sum_assignment(cost)
 
-    # print(sum(topo.servers[500:600]))
-    # print(cost[row_ind,col_ind], cost[row_ind,col_ind].sum())
-    # print(dId, col_ind, cost[row_ind,col_ind].sum())
-    if cost[row_ind,col_ind].sum() >= INFINITY:
-        placeResultOfd = []
-    else:
-        placeResultOfd = list(map(topo.transfertoNo, col_ind))
+    placeResultOfd = list(map(topo.transfertoNo, col_ind))
+    for c in cost[row_ind,col_ind]:
+        if c == INFINITY:
+            placeResultOfd = []
+            break
 
-    # print(dId, placeResultOfd)
+    print(dId, placeResultOfd)
     addtoResult(placeResultOfd, [dId, src, dst, exp, mipsList_bak], topo)
 
 
