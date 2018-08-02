@@ -3,9 +3,47 @@
 # maxize minmum vertical scaling heuristic (MVSH)
 import sys, os.path, argparse, re, math, random
 import numpy as np
-from scipy.optimize import linear_sum_assignment
 import fattree
+from collections import deque
 
+class HungarianAlgorithm(object):
+    def __init__(self,graph, m):
+        self.graph=graph
+        self.n=len(graph)
+        self.m = m       
+    def hungarian(self):
+        match=[-1]*self.n#记录匹配情况
+        used=[-1]*self.n#记录是否访问过
+        Q=deque()  #设置队列
+        prev=[0]*self.n  #代表上一节点
+        for i in range(self.n): 
+            if match[i]==-1:
+                Q.clear()
+                Q.append(i)
+                prev[i]=-1#设i为出发点
+                flag=False #未找到增广路
+                while len(Q)>0 and not flag:
+                    u=Q.popleft()
+                    for j in range(self.n):
+                        if not flag and self.graph[u][j]==1 and  used[j]!=i:
+                            used[j]=i        
+                            if match[j]!=-1:
+                                Q.append(match[j])
+                                prev[match[j]]=u#记录点的顺序
+                            else:
+                                flag=True
+                                d=u
+                                e=j
+                                while(d!=-1):#将原匹配的边去掉加入原来不在匹配中的边
+                                    t=match[d]
+                                    match[d]=e
+                                    match[e]=d
+                                    d=prev[d]
+                                    e=t
+        return list(match[0:self.m])
+
+
+DELMIN1 = '*'
 DELIM 	= " "
 NEWLINE = "\n"
 INFINITY = 100000000
@@ -47,9 +85,73 @@ def mvsh(handle, topo):
         exp = math.ceil(peak*100.0/tr)/100
         mipsList = topo.mips(sfc, tr)
         dTrans = [dId, src, dst, exp, mipsList]
-        # random place
         mvshPlaceDemand(dTrans, topo)
     topo.display()
+
+def svnfp(M):
+    if len(M) > len(M[0]):
+        return -1
+
+    rowLen, colLen = len(M), len(M[0])
+    Mb = []
+    for i in range(rowLen):
+        for j in range(colLen):
+            Mb.append((i,j, round(M[i][j]*100)/100) )
+    Mb = sorted(Mb, key=lambda x:x[2], reverse=True)
+
+    lo, hi = rowLen, rowLen * colLen
+    while lo <= hi:
+        mid = (hi + lo) // 2
+        res = dohga(Mb[:mid], rowLen, colLen)
+        # print(lo,mid,hi, res)
+        if sumBlowZero(res) > 0:
+            lo = mid + 1
+        else:
+            hi = mid - 1
+    if sumBlowZero(res) > 0:
+        mid += 1
+        res = dohga(Mb[:mid], rowLen, colLen)
+        if sumBlowZero(res) > 0:
+            return []
+    if sumEquaZero(res) > 1:
+        mid += 1
+        res = dohga(Mb[:mid], rowLen, colLen)
+        if sumEquaZero(res) > 1:
+            return []
+    return res
+
+def dohga(Mb, m, n):
+    graph = []
+    for i in range(n):
+        row = []
+        for j in range(n):
+            row.append(0)
+        graph.append(row)
+    
+    for tup in Mb:
+        i = tup[0]
+        j = tup[1]
+        graph[i][j] = 1
+    
+    h = HungarianAlgorithm(graph, m)
+    res = h.hungarian()
+    return res
+
+def sumBlowZero(arr):
+    l = len(arr)
+    cnt = 0
+    for i in range(l):
+        if arr[i] < 0:
+            cnt += 1
+    return cnt
+
+def sumEquaZero(arr):
+    l = len(arr)
+    cnt = 0
+    for i in range(l):
+        if arr[i] == 0:
+            cnt += 1
+    return cnt
 
 def mvshPlaceDemand(demand, topo):
     placeResultOfd = []
@@ -60,27 +162,22 @@ def mvshPlaceDemand(demand, topo):
     
     mipsListLen = len(mipsList)
     servListLen = len(serversNoList)
-    cost = np.array([[INFINITY]*servListLen]*mipsListLen)
+    
+    Matrix = []
     for i in range(mipsListLen):
         mips = mipsList[i]
+        row = []
         for j in range(servListLen):
             servNo = serversNoList[j]
-            if topo.ifCanCompleteDeploy(mips, exp, int(servNo)):
-                cost[i][j] = 0
-            elif (not topo.ifCanDeploy(mips, exp, int(servNo))):
-                cost[i][j] = INFINITY
-            else:
-                cost[i][j] = topo.serverLeftMips(int(servNo)) / max(topo.getScaleOfServers(int(servNo)), mips*(exp-1))
-
-    row_ind,col_ind = linear_sum_assignment(cost)
-
-    placeResultOfd = list(map(topo.transfertoNo, col_ind))
-    for c in cost[row_ind,col_ind]:
-        if c == INFINITY:
-            placeResultOfd = []
-            break
-
-    print(dId, placeResultOfd)
+            gamma_v = (topo.serverLeftMips(int(servNo))-mips) / max(topo.getScaleOfServers(int(servNo)), mips*(exp-1))        
+            row.append(gamma_v)
+        Matrix.append(row)
+    
+    placeResultOfd = svnfp(Matrix)
+    placeResultOfd = list(map(topo.transfertoNo, placeResultOfd))
+    print(placeResultOfd)
+    # if len(placeResultOfd) == 0:
+        # print(dId)
     addtoResult(placeResultOfd, [dId, src, dst, exp, mipsList_bak], topo)
 
 

@@ -69,3 +69,15 @@ python3 draw.py
 
 python3 mvsh.py -k 20 -i output1/traffic.txt -o output1/result_mvsh.txt -n
 
+
+
+
+# --- k=6 c=300 ---
+# 生成流量
+python3 traffic.py -c 300 -k 6 -Tm 10 -al 2.1 -s 10 -o debug/traffic.txt
+# MVSH
+python3 mvsh.py -k 6 -i debug/traffic.txt -o debug/result_mvsh.txt -n
+
+
+python3 resultAnalysis.py -c 300 -k 6 -i debug/result_mvsh.txt -o debug/analysis_mvsh.txt
+python3 plr.py -c 300 -k 6 -i output1/result_mvsh.txt -s 10 -o output1/plr_mvsh.txt
