@@ -81,3 +81,24 @@ python3 mvsh.py -k 6 -i debug/traffic.txt -o debug/result_mvsh.txt -n
 
 python3 resultAnalysis.py -c 300 -k 6 -i debug/result_mvsh.txt -o debug/analysis_mvsh.txt
 python3 plr.py -c 300 -k 6 -i output1/result_mvsh.txt -s 10 -o output1/plr_mvsh.txt
+
+
+
+# --- k=10 c=1000 ---
+# 生成流量
+python3 traffic.py -c 1000 -k 10 -Tm 10 -al 2.1 -s 10 -o out/traffic.txt
+# MVSH
+python3 mvsh.py -k 10 -i out/traffic.txt -o out/result_mvsh.txt -n
+python3 resultAnalysis.py -c 1000 -k 10 -i out/result_mvsh.txt -o out/analysis_mvsh.txt
+python3 plr.py -c 1000 -k 10 -i out/result_mvsh.txt -s 10 -o out/plr_mvsh.txt
+# 我的方案SVNFP
+python3 svnfp.py -k 10 -i out/traffic.txt -o out/result_svnf.txt -n
+python3 resultAnalysis.py -c 1000 -k 10 -i out/result_svnf.txt -o out/analysis_svnf.txt
+python3 plr.py -c 1000 -k 10 -i out/result_svnf.txt -s 10 -o out/plr_svnf.txt
+# 对比方案CLBP
+python3 clbp.py -k 10 -i out/traffic.txt -o out/result_clbp.txt -n
+python3 resultAnalysis.py -c 1000 -k 10 -i out/result_clbp.txt -o out/analysis_clbp.txt
+python3 plr.py -c 1000 -k 10 -i out/result_clbp.txt -s 10 -o out/plr_clbp.txt
+# 绘图
+python3 draw.py
+# MVSH

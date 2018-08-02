@@ -186,6 +186,14 @@ python3 draw.py
 | RNDP | 54.52% | 20.164 |
 | CLBP | 64.57% | 4.646 |
 
+### 4. k=10, c = 1000
+
+| 算法 | AR | FLP（跳数） | AVG SU |
+| --- | --- | --- | --- |
+| SVNFP | 95.6% | 33.560 | 98.031% |
+| SVNFP-adv | 64.5% | 9.592 | 67.375% |
+| CLBP | 75.7% | 5.142 | 72.944% |
+
 ### 折线图
 
 ![PLR](/results/PLR.png)
@@ -201,3 +209,6 @@ python3 draw.py
 ![BSR](/results/BSR2.png)
 
 ![SU](/results/SU2.png)
+
+### 更新结果
+

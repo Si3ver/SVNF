@@ -118,6 +118,13 @@ def svnfp(M):
         res = dohga(Mb[:mid], rowLen, colLen)
         if sumEquaZero(res) > 1:
             return []
+
+    for i in range(rowLen):
+        no = res[i]
+        if M[i][no] < 0:
+            res = []
+            break
+
     return res
 
 def dohga(Mb, m, n):
@@ -175,7 +182,7 @@ def mvshPlaceDemand(demand, topo):
     
     placeResultOfd = svnfp(Matrix)
     placeResultOfd = list(map(topo.transfertoNo, placeResultOfd))
-    print(placeResultOfd)
+    print(dId, placeResultOfd)
     # if len(placeResultOfd) == 0:
         # print(dId)
     addtoResult(placeResultOfd, [dId, src, dst, exp, mipsList_bak], topo)
