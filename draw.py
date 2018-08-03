@@ -15,7 +15,8 @@ def draw_plrs(plrList, dNum, algNum):
 
     lineTypes = ['r-', 'b--', 'g--']
     algs = ['SVNFP', 'SVNFP-adv', 'CLBP']
-    plt.figure(figsize=(15,5))
+    # algs = ['CLBP', 'SVNFP', 'SVNFP-adv']
+    # plt.figure(figsize=(15,5))
     for i in range(dNum):
         plt.subplot(1,3,i+1)
         for j in range(algNum):
@@ -24,7 +25,8 @@ def draw_plrs(plrList, dNum, algNum):
         plt.ylabel('packet loss rate(%)')
         plt.title('PLR')
         plt.legend()
-    plt.show()
+    # plt.savefig('/')
+    # plt.show()
 
 def draw_bsrs(bsrList, dNum, algNum):
     x_data = []
@@ -35,16 +37,17 @@ def draw_bsrs(bsrList, dNum, algNum):
 
     lineTypes = ['r-', 'b--', 'g--']
     algs = ['SVNFP', 'SVNFP-adv', 'CLBP']
-    plt.figure(figsize=(15,5))
+    # algs = ['CLBP', 'SVNFP', 'SVNFP-adv']
+    # plt.figure(figsize=(15,5))
     for i in range(dNum):
-        plt.subplot(1,3,i+1)
+        plt.subplot(1,3,i+1 + 1)
         for j in range(algNum):
             plt.plot(x_data[i], bsrList[i*dNum + j], lineTypes[j], label=algs[j],)
         plt.xlabel('quantity of peak traffics')
         plt.ylabel('bad server rate(%)')
         plt.title('BSR')
         plt.legend()
-    plt.show()
+    # plt.show()
 
 def draw_sus(suList, dNum, algNum):
     x_data = []
@@ -55,9 +58,10 @@ def draw_sus(suList, dNum, algNum):
 
     lineTypes = ['r-', 'b--', 'g--']
     algs = ['SVNFP', 'SVNFP-adv', 'CLBP']
-    plt.figure(figsize=(15,5))
+    # algs = ['CLBP', 'SVNFP', 'SVNFP-adv']
+    # plt.figure(figsize=(15,5))
     for i in range(dNum):
-        plt.subplot(1,3,i+1)
+        plt.subplot(1,3,i+1 + 2)
         for j in range(algNum):
             plt.plot(x_data[i], suList[i*dNum + j], lineTypes[j], label=algs[j],)
         plt.xlabel('quantity of peak traffics')
@@ -68,8 +72,9 @@ def draw_sus(suList, dNum, algNum):
 
 
 def main():
-    algList = ['svnf', 'mvsh', 'clbp']
-    dNumList = [1000, 5000, 10000]
+    algList = ['mvsh', 'svnf', 'clbp']
+    dNumList = [500]
+    plt.figure(figsize=(15,5))
 
     plr2List = []
     for dNum in dNumList:

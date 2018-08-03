@@ -121,7 +121,7 @@ def svnfp(M):
 
     for i in range(rowLen):
         no = res[i]
-        if M[i][no] < 0:
+        if M[i][no] < 1:
             res = []
             break
 

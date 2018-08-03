@@ -61,8 +61,26 @@ def parseResults(handle):
 def placeToTopo(results, topo):
     for result in results:
         [dId, _src, _dst, exp, mipsList, servList] = result
+        if ifRepeat(servList):
+            print('wrong place!', servList)
         for i in range(len(servList)):
             topo.deployToServ(dId, mipsList[i], exp, servList[i])
+
+def ifRepeat(L):
+    if len(L) == 0 or len(L) == 1:
+        return False
+    L_copy= []
+    for item in L:
+        L_copy.append(item)
+    for item in L_copy:
+        L.pop(0)
+        try:
+            L.index(item) 
+        except ValueError:
+            continue
+        else:
+            return True
+    return False
 
 def write_to_file(handle, placeResult):
     for i in range(0, len(placeResult)):
