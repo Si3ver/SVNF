@@ -77,7 +77,7 @@ def clbPlaceDemand(demand, topo):
                 mipsList.insert(0, mips)
 
     # 3. samePod
-    serversList = topo.getServersOfSamePod(src)
+    serversList = topo.getServersOfSamePod(src, src)
     serversNoList = list(map(int, serversList.keys()))
     while len(mipsList) > 0 and len(serversList) > 0:
         mips = mipsList.pop(0) 

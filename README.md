@@ -108,85 +108,55 @@ python3 draw.py
 
 ```shell
 #!/bin/sh
-# --- k=20 c=5000 ---
+# --- k=10 c=500 ---
 # 生成流量
-python3 traffic.py -c 5000 -k 20 -Tm 10 -al 2.1 -s 10 -o output1/traffic.txt
+python3 traffic.py -c 500 -k 10 -Tm 10 -al 2.1 -s 10 -o out500/traffic.txt
+# MVSH
+python3 mvsh.py -k 10 -i out500/traffic.txt -o out500/result_mvsh.txt -n
+python3 resultAnalysis.py -c 500 -k 10 -i out500/result_mvsh.txt -o out500/analysis_mvsh.txt
+python3 plr.py -c 500 -k 10 -i out500/result_mvsh.txt -s 10 -o out500/plr_mvsh.txt
 # 我的方案SVNFP
-python3 svnfp.py -k 20 -i output1/traffic.txt -o output1/result_svnf.txt -n
-python3 resultAnalysis.py -c 5000 -k 20 -i output1/result_svnf.txt -o output1/analysis_svnf.txt
-python3 plr.py -c 5000 -k 20 -i output1/result_svnf.txt -s 10 -o output1/plr_svnf.txt
-# 对比方案RNDP
-python3 rndp.py -k 20 -i output1/traffic.txt -o output1/result_rndp.txt -s 20 -n
-python3 resultAnalysis.py -c 5000 -k 20 -i output1/result_rndp.txt -o output1/analysis_rndp.txt
-python3 plr.py -c 5000 -k 20 -i output1/result_rndp.txt -s 10 -o output1/plr_rndp.txt
+python3 svnfp.py -k 10 -i out500/traffic.txt -o out500/result_svnf.txt -n
+python3 resultAnalysis.py -c 500 -k 10 -i out500/result_svnf.txt -o out500/analysis_svnf.txt
+python3 plr.py -c 500 -k 10 -i out500/result_svnf.txt -s 10 -o out500/plr_svnf.txt
 # 对比方案CLBP
-python3 clbp.py -k 20 -i output1/traffic.txt -o output1/result_clbp.txt -n
-python3 resultAnalysis.py -c 5000 -k 20 -i output1/result_clbp.txt -o output1/analysis_clbp.txt
-python3 plr.py -c 5000 -k 20 -i output1/result_clbp.txt -s 10 -o output1/plr_clbp.txt
-# --- k=20 c=1000 ---
-# 生成流量
-python3 traffic.py -c 1000 -k 20 -Tm 10 -al 2.1 -s 10 -o output2/traffic.txt
-# 我的方案SVNFP
-python3 svnfp.py -k 20 -i output2/traffic.txt -o output2/result_svnf.txt -n
-python3 resultAnalysis.py -c 1000 -k 20 -i output2/result_svnf.txt -o output2/analysis_svnf.txt
-python3 plr.py -c 1000 -k 20 -i output2/result_svnf.txt -s 10 -o output2/plr_svnf.txt
-# 对比方案RNDP
-python3 rndp.py -k 20 -i output2/traffic.txt -o output2/result_rndp.txt -s 20 -n
-python3 resultAnalysis.py -c 1000 -k 20 -i output2/result_rndp.txt -o output2/analysis_rndp.txt
-python3 plr.py -c 1000 -k 20 -i output2/result_rndp.txt -s 10 -o output2/plr_rndp.txt
-# 对比方案CLBP
-python3 clbp.py -k 20 -i output2/traffic.txt -o output2/result_clbp.txt -n
-python3 resultAnalysis.py -c 1000 -k 20 -i output2/result_clbp.txt -o output2/analysis_clbp.txt
-python3 plr.py -c 1000 -k 20 -i output2/result_clbp.txt -s 10 -o output2/plr_clbp.txt
-# --- k=20 c=10000 ---
-# 生成流量
-python3 traffic.py -c 10000 -k 20 -Tm 10 -al 2.1 -s 10 -o output3/traffic.txt
-# 我的方案SVNFP
-python3 svnfp.py -k 20 -i output3/traffic.txt -o output3/result_svnf.txt -n
-python3 resultAnalysis.py -c 10000 -k 20 -i output3/result_svnf.txt -o output3/analysis_svnf.txt
-python3 plr.py -c 10000 -k 20 -i output3/result_svnf.txt -s 10 -o output3/plr_svnf.txt
-# 对比方案RNDP
-python3 rndp.py -k 20 -i output3/traffic.txt -o output3/result_rndp.txt -s 20 -n
-python3 resultAnalysis.py -c 10000 -k 20 -i output3/result_rndp.txt -o output3/analysis_rndp.txt
-python3 plr.py -c 10000 -k 20 -i output3/result_rndp.txt -s 10 -o output3/plr_rndp.txt
-# 对比方案CLBP
-python3 clbp.py -k 20 -i output3/traffic.txt -o output3/result_clbp.txt -n
-python3 resultAnalysis.py -c 10000 -k 20 -i output3/result_clbp.txt -o output3/analysis_clbp.txt
-python3 plr.py -c 10000 -k 20 -i output3/result_clbp.txt -s 10 -o output3/plr_clbp.txt
+python3 clbp.py -k 10 -i out500/traffic.txt -o out500/result_clbp.txt -n
+python3 resultAnalysis.py -c 500 -k 10 -i out500/result_clbp.txt -o out500/analysis_clbp.txt
+python3 plr.py -c 500 -k 10 -i out500/result_clbp.txt -s 10 -o out500/plr_clbp.txt
 # 绘图
-python3 draw.py
+python3 draw.py -c 500
+# --- k=10 c=1000 ---
+# 生成流量
+python3 traffic.py -c 1000 -k 10 -Tm 10 -al 2.1 -s 10 -o out1000/traffic.txt
+# MVSH
+python3 mvsh.py -k 10 -i out1000/traffic.txt -o out1000/result_mvsh.txt -n
+python3 resultAnalysis.py -c 1000 -k 10 -i out1000/result_mvsh.txt -o out1000/analysis_mvsh.txt
+python3 plr.py -c 1000 -k 10 -i out1000/result_mvsh.txt -s 10 -o out1000/plr_mvsh.txt
+# 我的方案SVNFP
+python3 svnfp.py -k 10 -i out1000/traffic.txt -o out1000/result_svnf.txt -n
+python3 resultAnalysis.py -c 1000 -k 10 -i out1000/result_svnf.txt -o out1000/analysis_svnf.txt
+python3 plr.py -c 1000 -k 10 -i out1000/result_svnf.txt -s 10 -o out1000/plr_svnf.txt
+# 对比方案CLBP
+python3 clbp.py -k 10 -i out1000/traffic.txt -o out1000/result_clbp.txt -n
+python3 resultAnalysis.py -c 1000 -k 10 -i out1000/result_clbp.txt -o out1000/analysis_clbp.txt
+python3 plr.py -c 1000 -k 10 -i out1000/result_clbp.txt -s 10 -o out1000/plr_clbp.txt
+# 绘图
+python3 draw.py -c 1000
 ```
 
 ## 实验结果
 
-### 1. k=20, c = 1000
-
-| 算法 | AR | FLP（跳数） | AVG SU | Used Servers |
-| --- | --- | --- | --- | --- |
-| MVSH | 100% | 22.248 | 32.945% | 813 |
-| SVNFP | 100% | 12.846 |
-| RNDP | 100% | 37.648 |
-| CLBP | 100% | 6.166 |
-
-### 2. k=20, c = 5000
+### k=10, c = 500
 
 | 算法 | AR | FLP（跳数） | AVG SU |
 | --- | --- | --- | --- |
-| MVSH | 99.78% | 24.481 | 64.123% |
-| SVNFP | 99.8% | 13.380 |
-| RNDP | 99.92% | 37.796 |
-| CLBP | 95.86% | 6.574 |
+| SVNFP | 74.1% | 25.994 | 75.089% |
+| SVNFP-adv | 99.8% | 13.372 | 71.104% |
+| CLBP | 75.7% | 5.142 | 72.944% |
 
-### 3. k=20, c = 10000
+![实验1](/results/shiyan1.png)
 
-| 算法 | AR | FLP（跳数） | AVG SU |
-| --- | --- | --- | --- |
-| MVSH | 51.2% | 12.547 | 65.63% |
-| SVNFP | 57.55% | 8.137 |
-| RNDP | 54.52% | 20.164 |
-| CLBP | 64.57% | 4.646 |
-
-### 4. k=10, c = 1000
+### k=10, c = 1000
 
 | 算法 | AR | FLP（跳数） | AVG SU |
 | --- | --- | --- | --- |
@@ -194,21 +164,4 @@ python3 draw.py
 | SVNFP-adv | 64.5% | 9.592 | 67.375% |
 | CLBP | 75.7% | 5.142 | 72.944% |
 
-### 折线图
-
-![PLR](/results/PLR.png)
-
-![BSR](/results/BSR.png)
-
-![SU](/results/SU.png)
-
-### 新结果
-
-![PLR](/results/PLR2.png)
-
-![BSR](/results/BSR2.png)
-
-![SU](/results/SU2.png)
-
-### 更新结果
-
+![实验2](/results/shiyan2.png)

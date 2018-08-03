@@ -17,7 +17,7 @@ PLACE_FORMAT1 = r'(?P<src>[0-9]+)\s(?P<dst>[0-9]+)\s(?P<exp>[0-9]+\.[0-9]+)\s(?P
 PLACE_FORMAT2 = r'(?P<dId>[0-9]+)\s(?P<src>[0-9]+)\s(?P<dst>[0-9]+)\s(?P<exp>[0-9]+\.[0-9]+)\s(?P<mipsList>\[([0-9]+, )*[0-9]*\])\s(?P<servList>\[([0-9]+, )*[0-9]*\])'
 
 PLACE_FORMAT = ''
-
+ 
 def def_parser():
     parser = argparse.ArgumentParser(description='Analyzing Place Results!')
     parser.add_argument('-c', '--count', dest='c', help='How many service request', type=int, default=1000)
@@ -62,20 +62,22 @@ def placeToTopo(results, topo):
     for result in results:
         [dId, _src, _dst, exp, mipsList, servList] = result
         if ifRepeat(servList):
-            print('wrong place!', servList)
+            print('wrong place!', dId, servList)
         for i in range(len(servList)):
             topo.deployToServ(dId, mipsList[i], exp, servList[i])
 
 def ifRepeat(L):
     if len(L) == 0 or len(L) == 1:
         return False
-    L_copy= []
+    L_copy1, L_copy2= [], []
     for item in L:
-        L_copy.append(item)
-    for item in L_copy:
-        L.pop(0)
+        L_copy1.append(item)
+        L_copy2.append(item)
+    
+    for item in L_copy1:
+        L_copy2.pop(0)
         try:
-            L.index(item) 
+            L_copy2.index(item) 
         except ValueError:
             continue
         else:

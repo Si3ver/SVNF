@@ -73,7 +73,7 @@ def draw_sus(suList, dNum, algNum):
 
 def main():
     algList = ['mvsh', 'svnf', 'clbp']
-    dNumList = [500]
+    dNumList = [300]
     plt.figure(figsize=(15,5))
 
     plr2List = []

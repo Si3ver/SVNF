@@ -29,10 +29,10 @@ class FatTree:
         # 所有开启的服务器，其平均资源利用率
         [sumUsedMips, cnt] = [0]*2
         for serv in self.servers:
-            if serv < 0:
+            if serv < 0:                        # overload servers
                 sumUsedMips += self.serverCapacity
                 cnt += 1
-            elif serv < self.serverCapacity:
+            elif serv < self.serverCapacity:    # unoverload servers
                 sumUsedMips += self.serverCapacity - serv
                 cnt += 1
         servUtility = sumUsedMips/(self.serverCapacity*cnt) if cnt != 0 else 0
@@ -155,18 +155,26 @@ class FatTree:
         return servList
 
 
-    def getServersOfSamePod(self, no):
-        [pod, tor, _host] = self.parsePos(no)
-        start = self.calcServNo(pod, 0, 0)
-        end = self.calcServNo(pod, self.k//2-1, self.k//2-1)
+    def getServersOfSamePod(self, no1, no2):
+        [pod1, tor1, _host] = self.parsePos(no1)
+        [pod2, tor2, _host] = self.parsePos(no2)
+        if pod1 != pod2:
+            return False
+        start = self.calcServNo(pod1, 0, 0)
+        end = self.calcServNo(pod1, self.k//2-1, self.k//2-1)
         servList = {}
         for no in range(start, end+1):
             servList[str(no)] = self.servers[no - self.serverNoMin]
         # 排除掉sameTor
-        startOmit = self.calcServNo(pod, tor, 0)
-        endOmit = self.calcServNo(pod, tor, self.k//2-1)
-        for no in range(startOmit, endOmit+1):
+        startOmit1 = self.calcServNo(pod1, tor1, 0)
+        endOmit1 = self.calcServNo(pod1, tor1, self.k//2-1)
+        startOmit2 = self.calcServNo(pod2, tor2, 0)
+        endOmit2 = self.calcServNo(pod2, tor2, self.k//2-1)
+        for no in range(startOmit1, endOmit1+1):
             del servList[str(no)]
+        if startOmit1 != startOmit2:
+            for no in range(startOmit2, endOmit2+1):
+                del servList[str(no)]       
         return servList
 
 
@@ -182,10 +190,10 @@ class FatTree:
         servList = {}
         for no in range(start, end+1):
             servList[str(no)] = self.servers[no - self.serverNoMin]
-        for no in range(startOmit1, endOmit1):
+        for no in range(startOmit1, endOmit1+1):
             del servList[str(no)]
         if startOmit1 != startOmit2:
-            for no in range(startOmit2, endOmit2):
+            for no in range(startOmit2, endOmit2+1):
                 del servList[str(no)]
         return servList
       

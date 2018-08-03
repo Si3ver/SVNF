@@ -165,8 +165,8 @@ def placeDiffPodDemand(demand, topo):
                 mipsList.append(mips)
     # 3. samePodOfsrc
     # print(placeResult1Ofd+placeResult2Ofd)
-    srcPodServersList = topo.getServersOfSamePod(src,src)
-    while(len(mipsList) > 0 and len(srcPodServersList) > 0):
+    srcPodServersList = topo.getServersOfSamePod(src)
+    while(len(mipsList) > 0):
         if len(srcPodServersList) > 0:
             mips = mipsList.pop(0)
             no = chooseBestServ(mips, exp, srcPodServersList, topo)
@@ -177,11 +177,9 @@ def placeDiffPodDemand(demand, topo):
                 srcPodServersList = []
                 mipsList.insert(0, mips)
                 break
-    # if dId == 112:
-    #     print(placeResult1Ofd, placeResult2Ofd)
     # 4. samePodOfdst
-    dstPodServersList = topo.getServersOfSamePod(dst,dst)
-    while(len(mipsList) > 0 and len(dstPodServersList) > 0):
+    dstPodServersList = topo.getServersOfSamePod(dst)
+    while(len(mipsList) > 0):
         if len(dstPodServersList) > 0:
             mips = mipsList.pop(0)
             no = chooseBestServ(mips, exp, dstPodServersList, topo)
@@ -192,13 +190,9 @@ def placeDiffPodDemand(demand, topo):
                 dstPodServersList = []
                 mipsList.insert(0, mips)
                 break
-    # if dId == 100:
-    #     print(placeResult1Ofd, placeResult2Ofd)    
     # 5. otherPod
     otherServersList = topo.getServersOfOtherPod(src, dst)
-    # if dId == 112:
-    #     print(otherServersList)
-    while(len(mipsList) > 0 and len(otherServersList) > 0):
+    while(len(mipsList) > 0):
         if len(otherServersList) > 0:
             mips = mipsList.pop(0)
             no = chooseBestServ(mips, exp, otherServersList, topo)
@@ -209,8 +203,6 @@ def placeDiffPodDemand(demand, topo):
                 otherServersList = []
                 mipsList.insert(0, mips)
                 break
-    # if dId == 112:
-    #     print(placeResult1Ofd, placeResult2Ofd)  
     # place
     addtoResult(placeResult1Ofd + placeResult2Ofd, [dId, src, dst, exp, mipsList_bak], topo)
 
@@ -259,11 +251,9 @@ def placeSamePodDemand(demand, topo):
             else:
                 dstTorServersList = []
                 mipsList.append(mips)
-    if dId == 100:
-        print(placeResult1Ofd, placeResult2Ofd)
     # 3. samePod, choose same/Neighbor Tor!!!
-    srcPodServersList = topo.getServersOfSamePod(src, dst)
-    while(len(mipsList) > 0 and len(srcPodServersList) > 0):
+    srcPodServersList = topo.getServersOfSamePod(src)
+    while(len(mipsList) > 0):
         if len(srcPodServersList) > 0:
             mips = mipsList.pop(0)
             no = chooseBestServ(mips, exp, srcPodServersList, topo)
@@ -276,7 +266,7 @@ def placeSamePodDemand(demand, topo):
                 break
     # 4. otherPods 
     otherServersList = topo.getServersOfOtherPod(src, dst)  # 两个参数在同一个Pod
-    while(len(mipsList) > 0 and len(otherServersList) > 0):
+    while(len(mipsList) > 0):
         if len(otherServersList) > 0:
             mips = mipsList.pop(0)
             no = chooseBestServ(mips, exp, otherServersList, topo)
@@ -333,10 +323,10 @@ def placeSameTorDemand(demand, topo):
                 del srcTorServersList[str(no)]
             else:
                 srcTorServersList = []
-                mipsList.append(mips)    
+                mipsList.append(mips)
     # 3. samePod otherTor 
-    otherServersList = topo.getServersOfSamePod(src, src)  # 两个参数在同一个Pod
-    while(len(mipsList) > 0 and len(otherServersList) > 0):
+    otherServersList = topo.getServersOfSamePod(src)  # 两个参数在同一个Pod
+    while(len(mipsList) > 0):
         if len(otherServersList) > 0:
             mips = mipsList.pop(0)
             no = chooseBestServ(mips, exp, otherServersList, topo)
@@ -349,7 +339,7 @@ def placeSameTorDemand(demand, topo):
                 break
     # 4. otherPod
     otherServersList = topo.getServersOfOtherPod(src, dst)  # 两个参数在同一个Pod
-    while(len(mipsList) > 0 and len(otherServersList) > 0):
+    while(len(mipsList) > 0):
         if len(otherServersList) > 0:
             mips = mipsList.pop(0)
             no = chooseBestServ(mips, exp, otherServersList, topo)
@@ -401,8 +391,8 @@ def placeSameSerDemand(demand, topo):
                 srcTorServersList = []
                 mipsList.append(mips)
     # 3. samePod otherTor 
-    otherServersList = topo.getServersOfSamePod(src, src)  # 两个参数在同一个Pod
-    while(len(mipsList) > 0 and len(otherServersList) > 0):
+    otherServersList = topo.getServersOfSamePod(src)  # 两个参数在同一个Pod
+    while(len(mipsList) > 0):
         if len(otherServersList) > 0:
             mips = mipsList.pop(0)
             no = chooseBestServ(mips, exp, otherServersList, topo)
@@ -415,7 +405,7 @@ def placeSameSerDemand(demand, topo):
                 break
     # 4. otherPod
     otherServersList = topo.getServersOfOtherPod(src, dst)  # 两个参数在同一个Pod
-    while(len(mipsList) > 0 and len(otherServersList) > 0):
+    while(len(mipsList) > 0):
         if len(otherServersList) > 0:
             mips = mipsList.pop(0)
             no = chooseBestServ(mips, exp, otherServersList, topo)
@@ -431,12 +421,7 @@ def placeSameSerDemand(demand, topo):
 
 def addtoResult(resultOfd, demand, topo):
     [dId, src, dst, exp, mipsList] = demand
-    # print(dId, resultOfd)
     sfcLen = len(mipsList)
-
-    if sfcLen > len(resultOfd):
-        resultOfd = []
-
     placeResult.append(str(dId)+DELIM+str(src)+DELIM+str(dst)+DELIM+str(exp)+DELIM+str(mipsList)+DELIM+str(resultOfd))
     if sfcLen == len(resultOfd):
         for i in range(sfcLen):
