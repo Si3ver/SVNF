@@ -1,109 +1,90 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# 绘图
-import pickle
+import sys, pickle, argparse
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 
-def draw_plrs(plrList, dNum, algNum):
-    x_data = []
-    for i in range(dNum):
-        for j in range(algNum):
-            plrList[i*dNum + j] = list(map(lambda x:x*100, plrList[i*algNum + j]))
-        x_data.append(list(range(len(plrList[i*dNum]))))
+# 定义命令行参数格式
+def def_parser():
+    parser = argparse.ArgumentParser(description='draw graph of results')
+    parser.add_argument('-c', '--count', dest='c', help='How many service request', type=int, default=50)
+    return parser
 
-    lineTypes = ['r-', 'b--', 'g--']
-    algs = ['SVNFP', 'SVNFP-adv', 'CLBP']
-    # algs = ['CLBP', 'SVNFP', 'SVNFP-adv']
-    # plt.figure(figsize=(15,5))
-    for i in range(dNum):
-        plt.subplot(1,3,i+1)
-        for j in range(algNum):
-            plt.plot(x_data[i], plrList[i*dNum + j], lineTypes[j], label=algs[j],)
-        plt.xlabel('quantity of peak traffics')
-        plt.ylabel('packet loss rate(%)')
-        plt.title('PLR')
-        plt.legend()
-    # plt.savefig('/')
-    # plt.show()
+# 参数解析
+def parse_args(parser):
+    opts   = vars(parser.parse_args(sys.argv[1:]))
+    return opts
 
-def draw_bsrs(bsrList, dNum, algNum):
-    x_data = []
-    for i in range(dNum):
-        for j in range(algNum):
-            bsrList[i*dNum + j] = list(map(lambda x:x*100, bsrList[i*algNum + j]))
-        x_data.append(list(range(len(bsrList[i*dNum]))))
+def draw_plrs(plrList, algs, lineTypes):
+    plt.subplot(1,3,1)
+    x_data = list(range(len(plrList[0])))
+    x_data = list(map(lambda x:x*100/len(plrList[0]), x_data))
+    for i in range(len(algs)):
+        plrList[i] = list(map(lambda x:x*100, plrList[i]))
 
-    lineTypes = ['r-', 'b--', 'g--']
-    algs = ['SVNFP', 'SVNFP-adv', 'CLBP']
-    # algs = ['CLBP', 'SVNFP', 'SVNFP-adv']
-    # plt.figure(figsize=(15,5))
-    for i in range(dNum):
-        plt.subplot(1,3,i+1 + 1)
-        for j in range(algNum):
-            plt.plot(x_data[i], bsrList[i*dNum + j], lineTypes[j], label=algs[j],)
-        plt.xlabel('quantity of peak traffics')
-        plt.ylabel('bad server rate(%)')
-        plt.title('BSR')
-        plt.legend()
-    # plt.show()
+    for i in range(len(algs)):
+        plt.plot(x_data, plrList[i], lineTypes[i], label=algs[i], markevery=(len(plrList[0])//10, len(plrList[0])//5))
+    plt.xlabel('percentage of peak traffics(%)')
+    plt.ylabel('packet loss rate(%)')
+    plt.legend()
 
-def draw_sus(suList, dNum, algNum):
-    x_data = []
-    for i in range(dNum):
-        for j in range(algNum):
-            suList[i*dNum + j] = list(map(lambda x:x*100, suList[i*algNum + j]))
-        x_data.append(list(range(len(suList[i*dNum]))))
+def draw_bsrs(bsrList, algs, lineTypes):
+    plt.subplot(1,3,2)
+    x_data = list(range(len(bsrList[0])))
+    x_data = list(map(lambda x:x*100/len(bsrList[0]), x_data))
+    for i in range(len(algs)):
+        bsrList[i] = list(map(lambda x:x*100, bsrList[i]))
+    for i in range(len(algs)):
+        plt.plot(x_data, bsrList[i], lineTypes[i], label=algs[i], markevery=(len(bsrList[0])//10, len(bsrList[0])//5))
+    plt.xlabel('percentage of peak traffics(%)')
+    plt.ylabel('percentage of overload servers(%)')
+    plt.legend()
 
-    lineTypes = ['r-', 'b--', 'g--']
-    algs = ['SVNFP', 'SVNFP-adv', 'CLBP']
-    # algs = ['CLBP', 'SVNFP', 'SVNFP-adv']
-    # plt.figure(figsize=(15,5))
-    for i in range(dNum):
-        plt.subplot(1,3,i+1 + 2)
-        for j in range(algNum):
-            plt.plot(x_data[i], suList[i*dNum + j], lineTypes[j], label=algs[j],)
-        plt.xlabel('quantity of peak traffics')
-        plt.ylabel('Servers Utility(%)')
-        plt.title('SU')
-        plt.legend()
-    plt.show()
-
+def draw_sus(suList, algs, lineTypes):
+    plt.subplot(1,3,3)
+    x_data = list(range(len(suList[0])))
+    x_data = list(map(lambda x:x*100/len(suList[0]), x_data))
+    for i in range(len(algs)):
+        suList[i] = list(map(lambda x:x*100, suList[i]))
+    for i in range(len(algs)):
+        plt.plot(x_data, suList[i], lineTypes[i], label=algs[i], markevery=(len(suList[0])//10, len(suList[0])//5))
+    plt.xlabel('percentage of peak traffics(%)')
+    plt.ylabel('utility of servers(%)')
+    plt.legend()
 
 def main():
+    args = parse_args(def_parser())
+    dNum = args['c']
     algList = ['mvsh', 'svnf', 'clbp']
-    dNumList = [300]
-    plt.figure(figsize=(15,5))
 
     plr2List = []
-    for dNum in dNumList:
-        for alg in algList:
-            path = 'pickleData/plr2List_' + alg + str(dNum) + '.dat'
-            f = open(path, 'rb')
-            plr2List.append(pickle.load(f))
-            f.close()
-    draw_plrs(plr2List, len(dNumList), len(algList))
-
+    for alg in algList:
+        path = 'pickleData/plr2List_' + alg + str(dNum) + '.dat'
+        f = open(path, 'rb')
+        plr2List.append(pickle.load(f))
+        f.close()
     bsrList = []
-    for dNum in dNumList:
-        for alg in algList:
-            path = 'pickleData/percentPlrList_' + alg + str(dNum) + '.dat'
-            f = open(path, 'rb')
-            bsrList.append(pickle.load(f))
-            f.close()
-    draw_bsrs(bsrList, len(dNumList), len(algList))
-
+    for alg in algList:
+        path = 'pickleData/percentPlrList_' + alg + str(dNum) + '.dat'
+        f = open(path, 'rb')
+        bsrList.append(pickle.load(f))
+        f.close()
     suList = []
-    for dNum in dNumList:
-        for alg in algList:
-            path = 'pickleData/SUList_' + alg + str(dNum) + '.dat'
-            f = open(path, 'rb')
-            suList.append(pickle.load(f))
-            f.close()
-    draw_sus(suList, len(dNumList), len(algList))
+    for alg in algList:
+        path = 'pickleData/SUList_' + alg + str(dNum) + '.dat'
+        f = open(path, 'rb')
+        suList.append(pickle.load(f))
+        f.close()
 
+    algs = ['SVNFP', 'SVNFP-adv', 'CLBP']
+    lineTypes = ['rs-', 'gv-', 'bo:']
+    plt.figure(figsize=(15,5))
+    draw_plrs(plr2List, algs, lineTypes)
+    draw_bsrs(bsrList, algs, lineTypes)
+    draw_sus(suList, algs, lineTypes)
+    plt.tight_layout()
+    plt.savefig('results/c' + str(dNum) + '.eps')
 
 if __name__ == "__main__":
     main()
-

@@ -56,7 +56,7 @@ def doAnalysis(handle, topo, cntDemands):
             hop = 0
             for i in range(len(servList)-1):
                 hop += topo.hops(servList[i], servList[i+1])
-            hopSum += hop
+            hopSum += hop/(len(servList)-1)                     # 每条流 除以 sfc长度
             hopSumSD += topo.hops(int(d['src']), int(d['dst']))
             sfcLenSum += len(servList)-2
             analysisResult.append(str(dId) + DELIM + str(hop))

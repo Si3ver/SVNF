@@ -102,66 +102,6 @@ python3 plr.py
 python3 draw.py
 ```
 
-## 实验数据
+## 实验
 
-使用20-阶胖树拓扑，5000条流量，共有2000台服务器，每台服务器计算能力为100000mips。
-
-```shell
-#!/bin/sh
-# --- k=10 c=500 ---
-# 生成流量
-python3 traffic.py -c 500 -k 10 -Tm 10 -al 2.1 -s 10 -o out500/traffic.txt
-# MVSH
-python3 mvsh.py -k 10 -i out500/traffic.txt -o out500/result_mvsh.txt -n
-python3 resultAnalysis.py -c 500 -k 10 -i out500/result_mvsh.txt -o out500/analysis_mvsh.txt
-python3 plr.py -c 500 -k 10 -i out500/result_mvsh.txt -s 10 -o out500/plr_mvsh.txt
-# 我的方案SVNFP
-python3 svnfp.py -k 10 -i out500/traffic.txt -o out500/result_svnf.txt -n
-python3 resultAnalysis.py -c 500 -k 10 -i out500/result_svnf.txt -o out500/analysis_svnf.txt
-python3 plr.py -c 500 -k 10 -i out500/result_svnf.txt -s 10 -o out500/plr_svnf.txt
-# 对比方案CLBP
-python3 clbp.py -k 10 -i out500/traffic.txt -o out500/result_clbp.txt -n
-python3 resultAnalysis.py -c 500 -k 10 -i out500/result_clbp.txt -o out500/analysis_clbp.txt
-python3 plr.py -c 500 -k 10 -i out500/result_clbp.txt -s 10 -o out500/plr_clbp.txt
-# 绘图
-python3 draw.py -c 500
-# --- k=10 c=1000 ---
-# 生成流量
-python3 traffic.py -c 1000 -k 10 -Tm 10 -al 2.1 -s 10 -o out1000/traffic.txt
-# MVSH
-python3 mvsh.py -k 10 -i out1000/traffic.txt -o out1000/result_mvsh.txt -n
-python3 resultAnalysis.py -c 1000 -k 10 -i out1000/result_mvsh.txt -o out1000/analysis_mvsh.txt
-python3 plr.py -c 1000 -k 10 -i out1000/result_mvsh.txt -s 10 -o out1000/plr_mvsh.txt
-# 我的方案SVNFP
-python3 svnfp.py -k 10 -i out1000/traffic.txt -o out1000/result_svnf.txt -n
-python3 resultAnalysis.py -c 1000 -k 10 -i out1000/result_svnf.txt -o out1000/analysis_svnf.txt
-python3 plr.py -c 1000 -k 10 -i out1000/result_svnf.txt -s 10 -o out1000/plr_svnf.txt
-# 对比方案CLBP
-python3 clbp.py -k 10 -i out1000/traffic.txt -o out1000/result_clbp.txt -n
-python3 resultAnalysis.py -c 1000 -k 10 -i out1000/result_clbp.txt -o out1000/analysis_clbp.txt
-python3 plr.py -c 1000 -k 10 -i out1000/result_clbp.txt -s 10 -o out1000/plr_clbp.txt
-# 绘图
-python3 draw.py -c 1000
-```
-
-## 实验结果
-
-### k=10, c = 500
-
-| 算法 | AR | FLP（跳数） | AVG SU |
-| --- | --- | --- | --- |
-| SVNFP | 74.1% | 25.994 | 75.089% |
-| SVNFP-adv | 99.8% | 13.372 | 71.104% |
-| CLBP | 75.7% | 5.142 | 72.944% |
-
-![实验1](/results/shiyan1.png)
-
-### k=10, c = 1000
-
-| 算法 | AR | FLP（跳数） | AVG SU |
-| --- | --- | --- | --- |
-| SVNFP | 74.1% | 25.994 | 75.089% |
-| SVNFP-adv | 64.5% | 9.592 | 67.375% |
-| CLBP | 75.7% | 5.142 | 72.944% |
-
-![实验2](/results/shiyan2.png)
+[点我看实验结果](debug10/debug.md)
