@@ -1,4 +1,4 @@
-# Scalable Virtual Network Function Placement(SVNFP)
+# Scalable Virtual Network Function Placement(sVNFP)
 
 ## 说明
 

@@ -78,7 +78,7 @@ def main():
         f.close()
 
     algs = ['SVNFP', 'SVNFP-adv', 'CLBP']
-    lineTypes = ['rs-', 'gv-', 'bo:']
+    lineTypes = ['rs-', 'gv--', 'bo:']
     plt.figure(figsize=(15,5))
     draw_plrs(plr2List, algs, lineTypes)
     draw_bsrs(bsrList, algs, lineTypes)

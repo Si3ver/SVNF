@@ -64,7 +64,7 @@ def clbPlaceDemand(demand, topo):
     # 2. sameTor
     serversList = topo.getServersOfSameTor(src)
     serversNoList = list(map(int, serversList.keys()))
-    while len(mipsList) > 0 and len(serversList) > 0:
+    while len(mipsList) > 0 and len(serversNoList) > 0:
         mips = mipsList.pop(0) 
         while len(serversNoList) > 0:
             no = serversNoList.pop(0)
@@ -75,12 +75,11 @@ def clbPlaceDemand(demand, topo):
                 break
             if len(serversNoList) == 0:   # 没有合适的server，mips放回
                 mipsList.insert(0, mips)
-
     # 3. samePod
     serversList = topo.getServersOfSamePod(src, src)
     serversNoList = list(map(int, serversList.keys()))
-    while len(mipsList) > 0 and len(serversList) > 0:
-        mips = mipsList.pop(0) 
+    while len(mipsList) > 0 and len(serversNoList) > 0:
+        mips = mipsList.pop(0)
         while len(serversNoList) > 0:
             no = serversNoList.pop(0)
             if topo.ifCanDeploy(mips, exp, no):
@@ -90,11 +89,10 @@ def clbPlaceDemand(demand, topo):
                 break
             if len(serversNoList) == 0:   # 没有合适的server，mips放回
                 mipsList.insert(0, mips)
-    
     # 4. otherPod
     serversList = topo.getServersOfOtherPod(src, src)
     serversNoList = list(map(int, serversList.keys()))
-    while len(mipsList) > 0 and len(serversList) > 0:
+    while len(mipsList) > 0 and len(serversNoList) > 0:
         mips = mipsList.pop(0) 
         while len(serversNoList) > 0:
             no = serversNoList.pop(0)
@@ -138,7 +136,7 @@ def addtoResult(resultOfd, demand, topo):
         for i in range(sfcLen):
             no = resultOfd[i]
             mips = mipsList[i]
-            topo.deployToServ(dId, mips, exp, int(no))
+            topo.deployToServ(dId, mips, exp, int(no))        
 
 def write_to_file(handle, placeResult):
     for i in range(0, len(placeResult)):

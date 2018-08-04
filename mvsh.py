@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # maxize minmum vertical scaling heuristic (MVSH)
-import sys, os.path, argparse, re, math, random
+import sys, os.path, argparse, re, math
 import numpy as np
 import fattree
 from collections import deque
@@ -51,13 +51,12 @@ DEMAND_FORMAT = ''
 placeResult = []
 
 def def_parser():
-    parser = argparse.ArgumentParser(description='random fit vnf placment algorithm!')
+    parser = argparse.ArgumentParser(description='sVNFP algorithm!')
     parser.add_argument('-k', '--k-ray', dest='k', help='K parameter of K-ary fattree', type=int, required=True)
     parser.add_argument('-i', '--input', dest='i', help='Demands file (default is output/traffic.txt)',
                         type=str, default='output/traffic.txt')
     parser.add_argument('-o', '--output', dest='o', help='place results file name (default is output/result_rndp.txt)',
                         type=str, default='output/result_rndp.txt')
-    parser.add_argument('-s', '--seed', dest='s', help='Random seed', type=int, default=20)
     parser.add_argument('-n', '--no', dest='n', help='No id in request file',
                         action='store_true')
     return parser
@@ -86,7 +85,7 @@ def mvsh(handle, topo):
         mvshPlaceDemand(dTrans, topo)
     topo.display()
 
-def svnfp(M):
+def svnfp(M, dId):
     if len(M) > len(M[0]):
         return -1
 
@@ -101,7 +100,6 @@ def svnfp(M):
     while lo <= hi:
         mid = (hi + lo) // 2
         res = dohga(Mb[:mid], rowLen, colLen)
-        # print(lo,mid,hi, res)
         if sumBlowZero(res) > 0:
             lo = mid + 1
         else:
@@ -117,6 +115,11 @@ def svnfp(M):
         if sumEquaZero(res) > 1:
             return []
 
+    # if dId == 42:
+    #     print(res, rowLen)
+    #     for i in range(rowLen):
+    #         Mc = list(map(lambda x: (round(x*100))/100, M[i]))
+    #         print('------> i=', i,Mc)
     for i in range(rowLen):
         no = res[i]
         if M[i][no] < 1:
@@ -178,9 +181,9 @@ def mvshPlaceDemand(demand, topo):
             row.append(gamma_v)
         Matrix.append(row)
     
-    placeResultOfd = svnfp(Matrix)
+    placeResultOfd = svnfp(Matrix, dId)
     placeResultOfd = list(map(topo.transfertoNo, placeResultOfd))
-    print(dId, placeResultOfd)
+    # print(dId, placeResultOfd)
     # if len(placeResultOfd) == 0:
         # print(dId)
     addtoResult(placeResultOfd, [dId, src, dst, exp, mipsList_bak], topo)
@@ -196,6 +199,8 @@ def addtoResult(resultOfd, demand, topo):
             no = resultOfd[i]
             mips = mipsList[i]
             topo.deployToServ(dId, mips, exp, int(no))
+    # if dId == 49:
+    #     print(topo.servers)
 
 def write_to_file(handle, placeResult):
     for i in range(0, len(placeResult)):
@@ -204,7 +209,6 @@ def write_to_file(handle, placeResult):
 def main():
     global placeResult
     args = parse_args(def_parser())
-    # random.seed(args['s'])
     topo = fattree.FatTree(args['k'])
 
     with open(args['i']) as handle:
