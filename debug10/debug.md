@@ -96,6 +96,34 @@ python3 draw.py -c 100
 
 ![实验3](../results/c100.png)
 
+```shell
+# --- k=6 c=100 s=20 ---
+# 生成流量
+python3 traffic.py -c 100 -k 6 -Tm 10 -al 2.1 -s 20 -o debug100-2/traffic.txt
+# MVSH -- sVNFP
+python3 mvsh.py -k 6 -i debug100-2/traffic.txt -o debug100-2/result_mvsh.txt -n
+python3 resultAnalysis.py -c 100 -k 6 -i debug100-2/result_mvsh.txt -o debug100-2/analysis_mvsh.txt
+python3 plr.py -c 100 -k 6 -i debug100-2/result_mvsh.txt -s 20 -o debug100-2/plr_mvsh.txt
+# SVNFP -- sVNFP-adv
+python3 svnfp.py -k 6 -i debug100-2/traffic.txt -o debug100-2/result_svnf.txt -n
+python3 resultAnalysis.py -c 100 -k 6 -i debug100-2/result_svnf.txt -o debug100-2/analysis_svnf.txt
+python3 plr.py -c 100 -k 6 -i debug100-2/result_svnf.txt -s 20 -o debug100-2/plr_svnf.txt
+# CLBP
+python3 clbp.py -k 6 -i debug100-2/traffic.txt -o debug100-2/result_clbp.txt -n
+python3 resultAnalysis.py -c 100 -k 6 -i debug100-2/result_clbp.txt -o debug100-2/analysis_clbp.txt
+python3 plr.py -c 100 -k 6 -i debug100-2/result_clbp.txt -s 20 -o debug100-2/plr_clbp.txt
+# 绘图
+python3 draw.py -c 100
+```
+
+| 算法       | AR    | FLP（跳数） | AVG SU  |
+| ---       | ---   | ---        | ---     |
+| SVNFP     |  98%  |  5.122     |41.837%  |
+| SVNFP-adv |  99%  |  2.173     |43.160%  |
+| CLBP      | 100%  |  1.398     |52.211%  |
+
+![实验3](../results/c100-2.png)
+
 ## 实验4
 
 ```shell

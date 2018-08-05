@@ -93,8 +93,12 @@ def svnfp(M, dId):
     Mb = []
     for i in range(rowLen):
         for j in range(colLen):
-            Mb.append((i,j, round(M[i][j]*100)/100) )
+            if M[i][j] >= 1:
+                Mb.append((i,j, round(M[i][j]*100)/100) )
     Mb = sorted(Mb, key=lambda x:x[2], reverse=True)
+
+    if dId <= 1:
+        print(dId, len(Mb), '-----', Mb)
 
     lo, hi = rowLen, rowLen * colLen
     while lo <= hi:
@@ -115,7 +119,7 @@ def svnfp(M, dId):
         if sumEquaZero(res) > 1:
             return []
 
-    # if dId == 42:
+    # if dId == 50:
     #     print(res, rowLen)
     #     for i in range(rowLen):
     #         Mc = list(map(lambda x: (round(x*100))/100, M[i]))
@@ -180,7 +184,9 @@ def mvshPlaceDemand(demand, topo):
             gamma_v = (topo.serverLeftMips(int(servNo))-mips) / max(topo.getScaleOfServers(int(servNo)), mips*(exp-1))        
             row.append(gamma_v)
         Matrix.append(row)
-    
+    # if dId == 1:
+    #     print(Matrix)
+
     placeResultOfd = svnfp(Matrix, dId)
     placeResultOfd = list(map(topo.transfertoNo, placeResultOfd))
     # print(dId, placeResultOfd)
@@ -199,8 +205,6 @@ def addtoResult(resultOfd, demand, topo):
             no = resultOfd[i]
             mips = mipsList[i]
             topo.deployToServ(dId, mips, exp, int(no))
-    # if dId == 49:
-    #     print(topo.servers)
 
 def write_to_file(handle, placeResult):
     for i in range(0, len(placeResult)):
