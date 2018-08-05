@@ -4,53 +4,6 @@
 import sys, os.path, argparse, re, math
 import numpy as np
 import fattree
-from collections import deque
-
-class HungarianAlgorithm(object):
-    def __init__(self, graph, m, dId):
-        self.graph=graph
-        self.n=len(graph)
-        self.m = m
-        self.dId = dId
-    def hungarian(self):
-        match=[-1]*self.n           #记录匹配情况
-        used=[-1]*self.n            #记录是否访问过
-        Q=deque()                   #设置队列
-        prev=[0]*self.n             #代表上一节点
-        for i in range(self.n): 
-            if match[i]==-1:
-                Q.clear()
-                Q.append(i)
-                prev[i]=-1          #设i为出发点
-                flag=False          #未找到增广路
-                while len(Q)>0 and not flag:
-                    u=Q.popleft()
-                    for j in range(self.n):
-                        if not flag and self.graph[u][j]==1 and used[j]!=i:
-                            used[j]=i        
-                            if match[j]!=-1:
-                                Q.append(match[j])
-                                prev[match[j]]=u    #记录点的顺序
-                            else:
-                                flag=True
-                                d=u
-                                e=j
-                                while(d!=-1):       #将原匹配的边去掉加入原来不在匹配中的边
-                                    t=match[d]
-                                    match[d]=e
-                                    match[e]=d
-                                    d=prev[d]
-                                    e=t
-        # check match
-        # if self.dId == 1:
-        #     print(match[0:self.m], match)
-        for i in range(self.m):
-            j = match[i]
-            if self.graph[i][j] != 1:
-                # print(self.dId, match[0:self.m])
-                match[i] = -1
-                break
-        return list(match[0:self.m])
 
 DELMIN1 = '*'
 DELIM 	= " "
@@ -59,6 +12,46 @@ DEMAND_FORMAT1 = r'(?P<src>[0-9]+)\s(?P<dst>[0-9]+)\s(?P<tr>[0-9]+\.[0-9]+)\s(?P
 DEMAND_FORMAT2 = r'(?P<id>[0-9]+)\s(?P<src>[0-9]+)\s(?P<dst>[0-9]+)\s(?P<tr>[0-9]+\.[0-9]+)\s(?P<peak>[0-9]+\.[0-9]+)\s(?P<sfcLen>[0-9]+)\s(?P<sfc>\[([0-9]+, )*[0-9]+\])'
 DEMAND_FORMAT = ''
 placeResult = []
+
+def BFS_hungary(graph):
+    res=0
+    rowLen, colLen = len(graph), len(graph[0])
+    Q=[0]*10000
+    prev=[0]*colLen
+    Mx = [-1]*rowLen
+    My = [-1]*colLen
+    chk = [-1]*colLen
+    for i in range(rowLen):
+        if Mx[i]==-1:
+            qs=qe=0
+            Q[qe]=i
+            qe+=1
+            prev[i]=-1
+
+            flag=0
+            while(qs<qe and not flag):
+                u=Q[qs]
+                for v in range(colLen):
+                    if flag:continue
+                    if graph[u][v] and chk[v]!=i:
+                        chk[v]=i
+                        Q[qe]=My[v]
+                        qe+=1
+                        if My[v]>=0:
+                            prev[My[v]]=u
+                        else:
+                            flag=1
+                            d,e=u,v
+                            while d!=-1:
+                                t=Mx[d]
+                                Mx[d]=e
+                                My[e]=d
+                                d=prev[d]
+                                e=t
+                qs+=1
+            if Mx[i]!=-1:
+                res+=1
+    return Mx
 
 def def_parser():
     parser = argparse.ArgumentParser(description='sVNFP algorithm!')
@@ -107,14 +100,14 @@ def svnfp(M, dId):
                 Mb.append((i,j, round(M[i][j]*100)/100) )
     Mb = sorted(Mb, key=lambda x:x[2], reverse=True)
 
-    if dId <= 1:
-        print(dId, len(Mb), '-----', Mb[0:307])
+    if dId == 2:
+        print(dId, len(Mb), '-----', Mb)
 
     lo, hi = rowLen, rowLen * colLen
     while lo <= hi:
         mid = (hi + lo) // 2
-        if dId == 1:
-            print('--->',mid)
+        # if dId == 1:
+        #     print('--->',mid)
         res = dohga(Mb[:mid], rowLen, colLen, dId)
         if sumBlowZero(res) > 0:
             lo = mid + 1
@@ -122,22 +115,18 @@ def svnfp(M, dId):
             hi = mid - 1
     
     if sumBlowZero(res) > 0:
-        if dId == 1:
-            print('~~~')
         mid += 1
         res = dohga(Mb[:mid], rowLen, colLen, dId)
         if sumBlowZero(res) > 0:
             return []
     if sumEquaZero(res) > 1:
-        if dId == 1:
-            print('@@@')
         mid += 1
         res = dohga(Mb[:mid], rowLen, colLen, dId)
         if sumEquaZero(res) > 1:
             return []
             
-    if dId == 1:
-        print('+++++', res)
+    # if dId == 1:
+    #     print('+++++', res)
     #     for i in range(rowLen):
     #         Mc = list(map(lambda x: (round(x*100))/100, M[i]))
     #         print('------> i=', i,Mc)
@@ -146,8 +135,16 @@ def svnfp(M, dId):
         if M[i][no] < 1:
             res = []
             break
-
+    if dId == 2:
+        print(res)
     return res
+
+def print_matrix(M):
+    rowLen, colLen = len(M), len(M[0])
+    for i in range(rowLen):
+        for j in range(colLen):
+            print('%2d' % M[i][j], end=' ')
+        print()
 
 def dohga(Mb, m, n, dId):
     graph = []
@@ -161,9 +158,12 @@ def dohga(Mb, m, n, dId):
         i = tup[0]
         j = tup[1]
         graph[i][j] = 1
-    
-    h = HungarianAlgorithm(graph, m, dId)
-    res = h.hungarian()
+    # if dId == 2:
+        # print('---graph---',len(Mb))
+        # print_matrix(graph)
+    res = BFS_hungary(graph)
+    if dId == 2:
+        print('@@@',res)
     return res
 
 def sumBlowZero(arr):
@@ -198,7 +198,8 @@ def mvshPlaceDemand(demand, topo):
         row = []
         for j in range(servListLen):
             servNo = serversNoList[j]
-            gamma_v = (topo.serverLeftMips(int(servNo))-mips) / max(topo.getScaleOfServers(int(servNo)), mips*(exp-1))        
+            LeftMips = topo.serverLeftMips(int(servNo))
+            gamma_v = (LeftMips - mips) /  max(topo.getScaleOfServers(int(servNo)), mips*(exp-1))      
             row.append(gamma_v)
         Matrix.append(row)
     # if dId == 1:

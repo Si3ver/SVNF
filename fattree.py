@@ -255,8 +255,8 @@ class FatTree:
     # 对于一个VNF来说，mips = tau*tr，tau仅仅与VNF类型有关。假定其在180～220之间均匀分布。
     def mips(self, sfc, tr):
         vnfSum = 60
-        tauMin = 180
-        tauMax = 220
+        tauMin = 200
+        tauMax = 205
         res = []
         for vnf in sfc:
             vnfTau = tauMin + (tauMax - tauMin)*(vnf/vnfSum)

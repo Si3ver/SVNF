@@ -48,9 +48,10 @@ class HungarianAlgorithm(object):
 # graph = [[0,1,0],
 #          [1,0,1],
 #          [0,0,0]]
-graph = [[0,1,0],
-         [1,0,1]]
+graph = [[0,1,0,1],
+         [0,1,0,0],
+         [0,0,1,1]]
 
-h = HungarianAlgorithm(graph, 2, 1)
+h = HungarianAlgorithm(graph, 3, 1)
 res = h.hungarian()
 print(res)
