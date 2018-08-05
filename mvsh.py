@@ -7,39 +7,49 @@ import fattree
 from collections import deque
 
 class HungarianAlgorithm(object):
-    def __init__(self,graph, m):
+    def __init__(self, graph, m, dId):
         self.graph=graph
         self.n=len(graph)
-        self.m = m       
+        self.m = m
+        self.dId = dId
     def hungarian(self):
-        match=[-1]*self.n#记录匹配情况
-        used=[-1]*self.n#记录是否访问过
-        Q=deque()  #设置队列
-        prev=[0]*self.n  #代表上一节点
+        match=[-1]*self.n           #记录匹配情况
+        used=[-1]*self.n            #记录是否访问过
+        Q=deque()                   #设置队列
+        prev=[0]*self.n             #代表上一节点
         for i in range(self.n): 
             if match[i]==-1:
                 Q.clear()
                 Q.append(i)
-                prev[i]=-1#设i为出发点
-                flag=False #未找到增广路
+                prev[i]=-1          #设i为出发点
+                flag=False          #未找到增广路
                 while len(Q)>0 and not flag:
                     u=Q.popleft()
                     for j in range(self.n):
-                        if not flag and self.graph[u][j]==1 and  used[j]!=i:
+                        if not flag and self.graph[u][j]==1 and used[j]!=i:
                             used[j]=i        
                             if match[j]!=-1:
                                 Q.append(match[j])
-                                prev[match[j]]=u#记录点的顺序
+                                prev[match[j]]=u    #记录点的顺序
                             else:
                                 flag=True
                                 d=u
                                 e=j
-                                while(d!=-1):#将原匹配的边去掉加入原来不在匹配中的边
+                                while(d!=-1):       #将原匹配的边去掉加入原来不在匹配中的边
                                     t=match[d]
                                     match[d]=e
                                     match[e]=d
                                     d=prev[d]
                                     e=t
+        # check match
+        # if self.dId == 1:
+        #     print(match[0:self.m], match)
+        for i in range(self.m):
+            j = match[i]
+            if self.graph[i][j] != 1:
+                # print(self.dId, match[0:self.m])
+                match[i] = -1
+                break
         return list(match[0:self.m])
 
 DELMIN1 = '*'
@@ -98,29 +108,36 @@ def svnfp(M, dId):
     Mb = sorted(Mb, key=lambda x:x[2], reverse=True)
 
     if dId <= 1:
-        print(dId, len(Mb), '-----', Mb)
+        print(dId, len(Mb), '-----', Mb[0:307])
 
     lo, hi = rowLen, rowLen * colLen
     while lo <= hi:
         mid = (hi + lo) // 2
-        res = dohga(Mb[:mid], rowLen, colLen)
+        if dId == 1:
+            print('--->',mid)
+        res = dohga(Mb[:mid], rowLen, colLen, dId)
         if sumBlowZero(res) > 0:
             lo = mid + 1
         else:
             hi = mid - 1
+    
     if sumBlowZero(res) > 0:
+        if dId == 1:
+            print('~~~')
         mid += 1
-        res = dohga(Mb[:mid], rowLen, colLen)
+        res = dohga(Mb[:mid], rowLen, colLen, dId)
         if sumBlowZero(res) > 0:
             return []
     if sumEquaZero(res) > 1:
+        if dId == 1:
+            print('@@@')
         mid += 1
-        res = dohga(Mb[:mid], rowLen, colLen)
+        res = dohga(Mb[:mid], rowLen, colLen, dId)
         if sumEquaZero(res) > 1:
             return []
-
-    # if dId == 50:
-    #     print(res, rowLen)
+            
+    if dId == 1:
+        print('+++++', res)
     #     for i in range(rowLen):
     #         Mc = list(map(lambda x: (round(x*100))/100, M[i]))
     #         print('------> i=', i,Mc)
@@ -132,9 +149,9 @@ def svnfp(M, dId):
 
     return res
 
-def dohga(Mb, m, n):
+def dohga(Mb, m, n, dId):
     graph = []
-    for i in range(n):
+    for i in range(m):
         row = []
         for j in range(n):
             row.append(0)
@@ -145,7 +162,7 @@ def dohga(Mb, m, n):
         j = tup[1]
         graph[i][j] = 1
     
-    h = HungarianAlgorithm(graph, m)
+    h = HungarianAlgorithm(graph, m, dId)
     res = h.hungarian()
     return res
 
