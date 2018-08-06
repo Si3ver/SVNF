@@ -71,19 +71,19 @@ class FatTree:
         for dId in demandList:
             # print(dId, len(results))
             result = results[dId]
-            print('place+++++', dId, result)
+            # print('place+++++', dId, result)
             self.expDemand(result)
-            self.display_expServs()
+            # self.display_expServs()
             # self.display()
             [cntPlrServ, plr1, plr2] = self.calcplr()
-            print(cntPlrServ, plr1, plr2)
+            # print(cntPlrServ, plr1, plr2)
             # print('sum plrServers=%d, plr1=%.3f%%, plr2=%.3f%%' % (cntPlrServ, plr1*100.0, plr2*100.0))
             [_usedServersCnt, SU] = self.calcSU()
             SUList.append(SU)
             percentPlrList.append(cntPlrServ/len(self.servers))
             plr1List.append(plr1)
             plr2List.append(plr2)
-        print('plr1:', plr1List)
+        # print('plr1:', plr1List)
         return [percentPlrList, plr1List, plr2List, SUList]
 
 

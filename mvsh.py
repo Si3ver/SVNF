@@ -104,8 +104,8 @@ def svnfp(M, dId):
         #     print(i,row)
         Tmp.append(row)
 
-    if dId == 0:
-        print(Tmp)
+    # if dId == 0:
+    #     print(Tmp)
     for j in range(colLen):
         row = []
         for i in range(rowLen):
@@ -150,8 +150,8 @@ def svnfp(M, dId):
         if M[i][no] < 1:
             res = []
             break
-    if dId == 2:
-        print(res)
+    # if dId == 2:
+    #     print(res)
     return res
 
 def print_matrix(M):
@@ -177,8 +177,8 @@ def dohga(Mb, m, n, dId):
         # print('---graph---',len(Mb))
         # print_matrix(graph)
     res = BFS_hungary(graph)
-    if dId == 2:
-        print('@@@',res)
+    # if dId == 2:
+    #     print('@@@',res)
     return res
 
 def sumBlowZero(arr):
