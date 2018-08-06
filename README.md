@@ -104,4 +104,4 @@ python3 draw.py
 
 ## 实验
 
-[点我看实验结果](debug10/debug.md)
+[点我看实验结果](debug.md)

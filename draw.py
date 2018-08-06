@@ -85,8 +85,8 @@ def main():
     draw_bsrs(bsrList, algs, lineTypes)
     draw_sus(suList, algs, lineTypes)
     plt.tight_layout()
-    plt.savefig('results/c' + str(dNum) + '-c'+str(args['c'])+'s'+str(args['s']) + '.eps')
-    plt.savefig('results/c' + str(dNum) + '-c'+str(args['c'])+'s'+str(args['s']) + '.png')
+    plt.savefig('results/c'+str(args['c'])+'s'+str(args['s'])+'.eps')
+    plt.savefig('results/c'+str(args['c'])+'s'+str(args['s'])+'.png')
 
 if __name__ == "__main__":
     main()
