@@ -38,7 +38,15 @@ def calcTrafficRate(Tm, alpha):
         exponent = 1 / (alpha - 1)
         tr = pow(base, exponent)
         if tr / Tm < 10:
-            peak = tr*(random.random()*1+1)                   # 随机扩大1～2倍
+            # 实验1
+            # peak = tr*(random.random()*1+1)                     # 随机扩大1～2倍
+            # 实验2
+            # peak = tr*(random.random()*3+1)                     # 随机扩大3～4倍
+            # 实验3
+            if random.randint(0,1) == 0:
+                peak = tr*(random.random()*1+1)                     # 随机扩大1～2倍
+            else:
+                peak = tr*(random.random()*3+1)                     # 随机扩大1～2倍
             return [tr, peak]
 
 def generateATraffic(args, file):

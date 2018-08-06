@@ -58,28 +58,54 @@ python3 draw.py -c 500 -s 30
 
 ![实验1](results/c500s30-s.png)
 
-## 实验2 (exp: 4~5)
+## 实验2 (exp: 3~4)
 
 ```shell
 # --- k=10 c=500 s=30 ---
 # 生成流量
-python3 traffic.py -c 500 -k 10 -Tm 10 -al 2.1 -s 20 -o shiyan1/traffic-c100s20.txt
-python3 mvsh.py -k 10 -i shiyan1/traffic-c100s20.txt -o shiyan1/result_mvsh-c100s20.txt -n
-python3 resultAnalysis.py -c 500 -k 10 -i shiyan1/result_mvsh-c100s20.txt -o shiyan1/analysis_mvsh-c100s20.txt
-python3 plr.py -c 500 -k 10 -i shiyan1/result_mvsh-c100s20.txt -s 30 -o shiyan1/plr_mvsh-c100s20.txt -a mvsh
-python3 svnfp.py -k 10 -i shiyan1/traffic-c100s20.txt -o shiyan1/result_svnf-c100s20.txt -n
-python3 resultAnalysis.py -c 500 -k 10 -i shiyan1/result_svnf-c100s20.txt -o shiyan1/analysis_svnf-c100s20.txt
-python3 plr.py -c 500 -k 10 -i shiyan1/result_svnf-c100s20.txt -s 30 -o shiyan1/plr_svnf-c100s20.txt -a svnf
-python3 clbp.py -k 10 -i shiyan1/traffic-c100s20.txt -o shiyan1/result_clbp-c100s20.txt -n
-python3 resultAnalysis.py -c 500 -k 10 -i shiyan1/result_clbp-c100s20.txt -o shiyan1/analysis_clbp-c100s20.txt
-python3 plr.py -c 500 -k 10 -i shiyan1/result_clbp-c100s20.txt -s 30 -o shiyan1/plr_clbp-c100s20.txt -a clbp
+python3 traffic.py -c 500 -k 10 -Tm 10 -al 2.1 -s 20 -o shiyan2/traffic-c100s20.txt
+python3 mvsh.py -k 10 -i shiyan2/traffic-c100s20.txt -o shiyan2/result_mvsh-c100s20.txt -n
+python3 resultAnalysis.py -c 500 -k 10 -i shiyan2/result_mvsh-c100s20.txt -o shiyan2/analysis_mvsh-c100s20.txt
+python3 plr.py -c 500 -k 10 -i shiyan2/result_mvsh-c100s20.txt -s 30 -o shiyan2/plr_mvsh-c100s20.txt -a mvsh
+python3 svnfp.py -k 10 -i shiyan2/traffic-c100s20.txt -o shiyan2/result_svnf-c100s20.txt -n
+python3 resultAnalysis.py -c 500 -k 10 -i shiyan2/result_svnf-c100s20.txt -o shiyan2/analysis_svnf-c100s20.txt
+python3 plr.py -c 500 -k 10 -i shiyan2/result_svnf-c100s20.txt -s 30 -o shiyan2/plr_svnf-c100s20.txt -a svnf
+python3 clbp.py -k 10 -i shiyan2/traffic-c100s20.txt -o shiyan2/result_clbp-c100s20.txt -n
+python3 resultAnalysis.py -c 500 -k 10 -i shiyan2/result_clbp-c100s20.txt -o shiyan2/analysis_clbp-c100s20.txt
+python3 plr.py -c 500 -k 10 -i shiyan2/result_clbp-c100s20.txt -s 30 -o shiyan2/plr_clbp-c100s20.txt -a clbp
 python3 draw.py -c 500 -s 30
 ```
 
 | 算法       | AR    | FLP（跳数） | AVG SU  |
 | ---       | ---   | ---        | ---     |
-| sVNFP     | 100%  |  5.090     |49.697%  |
-| sVNFP-adv | 100%  |  2.370     |49.697%  |
-| CLBP      | 100%  |  2.082     |92.032%  |
+| sVNFP     | 100%  |  5.119     |49.697%  |
+| sVNFP-adv | 100%  |  2.371     |49.697%  |
+| CLBP      | 100%  |  2.205     |79.136%  |
 
-![实验2](results/c500s20-b.png)
+![实验2](results/c500s30-b.png)
+
+## 实验3 (exp: 一半1~2，一半3~4)
+
+```shell
+# --- k=10 c=500 s=30 ---
+# 生成流量
+python3 traffic.py -c 500 -k 10 -Tm 10 -al 2.1 -s 20 -o shiyan3/traffic-c100s20.txt
+python3 mvsh.py -k 10 -i shiyan3/traffic-c100s20.txt -o shiyan3/result_mvsh-c100s20.txt -n
+python3 resultAnalysis.py -c 500 -k 10 -i shiyan3/result_mvsh-c100s20.txt -o shiyan3/analysis_mvsh-c100s20.txt
+python3 plr.py -c 500 -k 10 -i shiyan3/result_mvsh-c100s20.txt -s 30 -o shiyan3/plr_mvsh-c100s20.txt -a mvsh
+python3 svnfp.py -k 10 -i shiyan3/traffic-c100s20.txt -o shiyan3/result_svnf-c100s20.txt -n
+python3 resultAnalysis.py -c 500 -k 10 -i shiyan3/result_svnf-c100s20.txt -o shiyan3/analysis_svnf-c100s20.txt
+python3 plr.py -c 500 -k 10 -i shiyan3/result_svnf-c100s20.txt -s 30 -o shiyan3/plr_svnf-c100s20.txt -a svnf
+python3 clbp.py -k 10 -i shiyan3/traffic-c100s20.txt -o shiyan3/result_clbp-c100s20.txt -n
+python3 resultAnalysis.py -c 500 -k 10 -i shiyan3/result_clbp-c100s20.txt -o shiyan3/analysis_clbp-c100s20.txt
+python3 plr.py -c 500 -k 10 -i shiyan3/result_clbp-c100s20.txt -s 30 -o shiyan3/plr_clbp-c100s20.txt -a clbp
+python3 draw.py -c 500 -s 30
+```
+
+| 算法       | AR    | FLP（跳数） | AVG SU  |
+| ---       | ---   | ---        | ---     |
+| sVNFP     | 100%  |  5.121     |47.066%  |
+| sVNFP-adv | 100%  |  2.410     |47.066%  |
+| CLBP      | 100%  |  2.164     |85.265%  |
+
+![实验3](results/c500s30-m.png)
