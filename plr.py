@@ -29,6 +29,7 @@ def def_parser():
     parser.add_argument('-n', '--no', dest='n', help='No id in request file',
                         action='store_true')
     parser.add_argument('-s', '--seed', dest='s', help='Random seed', type=int, default=10)
+    parser.add_argument('-a', '--algs', dest='a', help='used algs', type=str, default='svnf')
 
     return parser
 
@@ -109,10 +110,15 @@ def main():
         write_to_file(handle, plr2List)
 
     # 序列化要作图的数据
-    dat0Path = 'pickleData/percentPlrList_'+path[-8:-4]+str(args['c'])+'.dat'
-    dat1Path = 'pickleData/plr1List_'+path[-8:-4]+str(args['c'])+'.dat'
-    dat2Path = 'pickleData/plr2List_'+path[-8:-4]+str(args['c'])+'.dat'
-    dat3Path = 'pickleData/SUList_'+path[-8:-4]+str(args['c'])+'.dat'
+    dat0Path = 'pickleData/percentPlrList_'+args['a']+'-c'+str(args['c'])+'s'+str(args['s'])+'.dat'
+    dat1Path = 'pickleData/plr1List_'      +args['a']+'-c'+str(args['c'])+'s'+str(args['s'])+'.dat'
+    dat2Path = 'pickleData/plr2List_'      +args['a']+'-c'+str(args['c'])+'s'+str(args['s'])+'.dat'
+    dat3Path = 'pickleData/SUList_'        +args['a']+'-c'+str(args['c'])+'s'+str(args['s'])+'.dat'
+
+    # print(dat0Path)
+    # print(dat1Path)
+    # print(dat2Path)
+    # print(dat3Path)
     
     f = open(dat0Path, 'wb')
     pickle.dump(percentPlrList, f)

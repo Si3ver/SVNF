@@ -9,6 +9,7 @@ import matplotlib.ticker as mtick
 def def_parser():
     parser = argparse.ArgumentParser(description='draw graph of results')
     parser.add_argument('-c', '--count', dest='c', help='How many service request', type=int, default=50)
+    parser.add_argument('-s', '--seed', dest='s', help='Random seed', type=int, default=10)
     return parser
 
 # 参数解析
@@ -60,19 +61,19 @@ def main():
 
     plr2List = []
     for alg in algList:
-        path = 'pickleData/plr2List_' + alg + str(dNum) + '.dat'
+        path = 'pickleData/plr2List_'       + alg + '-c' + str(dNum) + 's' + str(args['s']) + '.dat'
         f = open(path, 'rb')
         plr2List.append(pickle.load(f))
         f.close()
     bsrList = []
     for alg in algList:
-        path = 'pickleData/percentPlrList_' + alg + str(dNum) + '.dat'
+        path = 'pickleData/percentPlrList_' + alg + '-c' + str(dNum) + 's' + str(args['s']) + '.dat'
         f = open(path, 'rb')
         bsrList.append(pickle.load(f))
         f.close()
     suList = []
     for alg in algList:
-        path = 'pickleData/SUList_' + alg + str(dNum) + '.dat'
+        path = 'pickleData/SUList_'         + alg + '-c' + str(dNum) + 's' + str(args['s']) + '.dat'
         f = open(path, 'rb')
         suList.append(pickle.load(f))
         f.close()
@@ -84,8 +85,8 @@ def main():
     draw_bsrs(bsrList, algs, lineTypes)
     draw_sus(suList, algs, lineTypes)
     plt.tight_layout()
-    plt.savefig('results/c' + str(dNum) + '.eps')
-    plt.savefig('results/c' + str(dNum) + '.png')
+    plt.savefig('results/c' + str(dNum) + '-c'+str(args['c'])+'s'+str(args['s']) + '.eps')
+    plt.savefig('results/c' + str(dNum) + '-c'+str(args['c'])+'s'+str(args['s']) + '.png')
 
 if __name__ == "__main__":
     main()

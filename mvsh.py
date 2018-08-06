@@ -94,14 +94,29 @@ def svnfp(M, dId):
 
     rowLen, colLen = len(M), len(M[0])
     Mb = []
+    Tmp = []
     for i in range(rowLen):
+        row = []
         for j in range(colLen):
-            if M[i][j] >= 1:
-                Mb.append((i,j, round(M[i][j]*100)/100) )
-    Mb = sorted(Mb, key=lambda x:x[2], reverse=True)
+            row.append((i,j, round(M[i][j]*100)/100))         
+        row = sorted(row, key=lambda x:x[2], reverse=True)
+        # if dId == 0:
+        #     print(i,row)
+        Tmp.append(row)
 
-    if dId == 2:
-        print(dId, len(Mb), '-----', Mb)
+    if dId == 0:
+        print(Tmp)
+    for j in range(colLen):
+        row = []
+        for i in range(rowLen):
+            row.append(Tmp[i][j])
+        row = sorted(row, key=lambda x:x[2], reverse=True)
+        for i in range(rowLen):
+            Mb.append(row[i])
+
+
+    # if dId == 2:
+    #     print(dId, len(Mb), '-----', Mb)
 
     lo, hi = rowLen, rowLen * colLen
     while lo <= hi:
