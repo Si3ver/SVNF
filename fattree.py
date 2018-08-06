@@ -40,6 +40,14 @@ class FatTree:
 
     
     def calcplr(self):
+        # cnt, sump = 0, 0.0
+        # for i in range(len(self.servers)):
+        #     if self.servers[i] < 0:
+        #         cnt += 1
+        #         sump -= self.servers[i]
+        # if cnt == 0:
+        #     return [0, 0, 0]
+        # return [cnt, sump/(self.serverCapacity * cnt), sump/(self.serverCapacity * self.cntServers)]
         cnt = 0
         sumPlr = 0.0
         for _servNo, plr in self.plrServerList.items():
@@ -63,16 +71,28 @@ class FatTree:
         for dId in demandList:
             # print(dId, len(results))
             result = results[dId]
+            print('place+++++', dId, result)
             self.expDemand(result)
+            self.display_expServs()
             # self.display()
             [cntPlrServ, plr1, plr2] = self.calcplr()
+            print(cntPlrServ, plr1, plr2)
             # print('sum plrServers=%d, plr1=%.3f%%, plr2=%.3f%%' % (cntPlrServ, plr1*100.0, plr2*100.0))
             [_usedServersCnt, SU] = self.calcSU()
             SUList.append(SU)
             percentPlrList.append(cntPlrServ/len(self.servers))
             plr1List.append(plr1)
             plr2List.append(plr2)
+        print('plr1:', plr1List)
         return [percentPlrList, plr1List, plr2List, SUList]
+
+
+    def display_expServs(self):
+        print(' ###### ')
+        for i in range(self.cntServers):
+            if self.servers[i] < 0:
+                print('%d:%.2f'%(self.transfertoNo(i),self.plrServerList[self.transfertoNo(i)]), end=' ')
+        print()
 
 
     def expDemand(self, result):
@@ -84,6 +104,7 @@ class FatTree:
             
             # 检测是否丢包
             if self.servers[servNo - self.serverNoMin] < 0:
+                # 一台服务器的丢包率 = 溢出的 - 总收到的
                 self.plrServerList[servNo] = (0 - self.servers[servNo - self.serverNoMin])/(self.serverCapacity-self.servers[servNo - self.serverNoMin])
 
 

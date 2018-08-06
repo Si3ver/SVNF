@@ -43,6 +43,9 @@ def calcTrafficRate(Tm, alpha):
 
 def generateATraffic(args, file):
     global DELIM, NEWLINE
+    # x,y = int(args['min']), int(args['max'])
+    # src = random.randint(x, (3*x+y)//4)                    # 源
+    # dst = random.randint((x+3*y)//4, y)                    # 目的    
     src = random.randint(args['min'], args['max'])          # 源
     dst = random.randint(args['min'], args['max'])          # 目的
     [tr, peak] = calcTrafficRate(args['Tm'], args['al'])

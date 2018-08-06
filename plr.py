@@ -62,8 +62,8 @@ def parseResults(handle):
 def placeToTopo(results, topo):
     for result in results:
         [dId, _src, _dst, exp, mipsList, servList] = result
-        if ifRepeat(servList):
-            print('wrong place!', dId, servList)
+        # if ifRepeat(servList):
+        #     print('wrong place!', dId, servList)
         for i in range(len(servList)):
             topo.deployToServ(dId, mipsList[i], exp, servList[i])
 
@@ -114,11 +114,6 @@ def main():
     dat1Path = 'pickleData/plr1List_'      +args['a']+'-c'+str(args['c'])+'s'+str(args['s'])+'.dat'
     dat2Path = 'pickleData/plr2List_'      +args['a']+'-c'+str(args['c'])+'s'+str(args['s'])+'.dat'
     dat3Path = 'pickleData/SUList_'        +args['a']+'-c'+str(args['c'])+'s'+str(args['s'])+'.dat'
-
-    # print(dat0Path)
-    # print(dat1Path)
-    # print(dat2Path)
-    # print(dat3Path)
     
     f = open(dat0Path, 'wb')
     pickle.dump(percentPlrList, f)

@@ -78,7 +78,7 @@ def main():
         suList.append(pickle.load(f))
         f.close()
 
-    algs = ['SVNFP', 'SVNFP-adv', 'CLBP']
+    algs = ['sVNFP', 'sVNFP-adv', 'CLBP']
     lineTypes = ['rs-', 'gv--', 'bo:']
     plt.figure(figsize=(15,5))
     draw_plrs(plr2List, algs, lineTypes)
