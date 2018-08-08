@@ -30,8 +30,6 @@ python3 draw.py -c 100 -s 30
 | sVNFP-adv | 100%  |  2.404     |60.219%  |
 | CLBP      | 100%  |  1.908     |88.552%  |
 
-![实验0](results/c100s30.png)
-
 ## 实验1   (exp: 1~2)
 
 ```shell
@@ -56,9 +54,9 @@ python3 draw.py -c 500 -s 30 -x 1
 | sVNFP-adv | 100%  |  2.370     |49.697%  |
 | CLBP      | 100%  |  2.082     |92.032%  |
 
-![plr](results/plr_c500s30-1.png)
-![bsr](results/bsr_c500s30-1.png)
-![su](results/su_c500s30-1.png)
+![plr](./results/plr_c500s30-1.pdf)
+![bsr](./results/bsr_c500s30-1.pdf)
+![su](./results/su_c500s30-1.pdf)
 
 ## 实验2 (exp: 3~4)
 
@@ -84,11 +82,11 @@ python3 draw.py -c 500 -s 30 -x 2
 | sVNFP-adv | 100%  |  2.371     |49.697%  |
 | CLBP      | 100%  |  2.205     |79.136%  |
 
-![plr](results/plr_c500s30-2.png)
-![bsr](results/bsr_c500s30-2.png)
-![su](results/su_c500s30-2.png)
+![plr](results/plr_c500s30-2.pdf)
+![bsr](results/bsr_c500s30-2.pdf)
+![su](results/su_c500s30-2.pdf)
 
-## 实验3 (exp: 一半1\~2，一半3\~4)
+<!-- ## 实验3 (exp: 一半1\~2，一半3\~4)
 
 ```shell
 # --- k=10 c=500 s=30 ---
@@ -112,6 +110,6 @@ python3 draw.py -c 500 -s 30 -x 3
 | sVNFP-adv | 100%  |  2.410     |47.066%  |
 | CLBP      | 100%  |  2.164     |85.265%  |
 
-![plr](results/plr_c500s30-3.png)
-![bsr](results/bsr_c500s30-3.png)
-![su](results/su_c500s30-3.png)
+![plr](./results/plr_c500s30-3.pdf)
+![bsr](results/bsr_c500s30-3.pdf)
+![su](results/su_c500s30-3.pdf) -->
