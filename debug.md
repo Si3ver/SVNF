@@ -54,9 +54,12 @@ python3 draw.py -c 500 -s 30 -x 1
 | sVNFP-adv | 100%  |  2.370     |49.697%  |
 | CLBP      | 100%  |  2.082     |92.032%  |
 
-![plr](./results/plr_c500s30-1.pdf)
-![bsr](./results/bsr_c500s30-1.pdf)
-![su](./results/su_c500s30-1.pdf)
+[plr](./results/plr_c500s30-1.pdf)
+[bsr](./results/bsr_c500s30-1.pdf)
+[su](./results/su_c500s30-1.pdf)
+[cdf](cdf_su0.2-1.pdf)
+[cdf](cdf_su0.5-1.pdf)
+[cdf](cdf_su0.7-1.pdf)
 
 ## 实验2 (exp: 3~4)
 
@@ -82,9 +85,12 @@ python3 draw.py -c 500 -s 30 -x 2
 | sVNFP-adv | 100%  |  2.371     |49.697%  |
 | CLBP      | 100%  |  2.205     |79.136%  |
 
-![plr](results/plr_c500s30-2.pdf)
-![bsr](results/bsr_c500s30-2.pdf)
-![su](results/su_c500s30-2.pdf)
+[plr](results/plr_c500s30-2.pdf)
+[bsr](results/bsr_c500s30-2.pdf)
+[su](results/su_c500s30-2.pdf)
+[cdf](cdf_su0.2-2.pdf)
+[cdf](cdf_su0.5-2.pdf)
+[cdf](cdf_su0.7-2.pdf)
 
 <!-- ## 实验3 (exp: 一半1\~2，一半3\~4)
 
