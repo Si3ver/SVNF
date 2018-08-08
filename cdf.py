@@ -97,5 +97,3 @@ if __name__=="__main__":
                 suList.append(content)
             fOutPath = './cdf_su'+str(perce)+'-'+str(x)+'.pdf'
             Hopcount_CDF(suList, fOutPath, algs_new)
-    
-

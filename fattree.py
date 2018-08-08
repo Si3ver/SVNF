@@ -28,7 +28,7 @@ class FatTree:
 
     def calcSU(self):
         # 所有开启的服务器，其平均资源利用率
-        [sumUsedMips, cnt] = [0]*2
+        sumUsedMips, cnt = 0,0
         for serv in self.servers:
             if serv < 0:                        # overload servers
                 sumUsedMips += self.serverCapacity
@@ -45,7 +45,7 @@ class FatTree:
             if serv < 0:
                 res.append(1)
             else:
-                res.append(serv/self.serverCapacity)
+                res.append(1.0 - serv/self.serverCapacity)
         return res
 
     def calcplr(self):
@@ -71,6 +71,14 @@ class FatTree:
         return idx + self.serverNoMin
 
 
+    def test(self):
+        # print(self.servers)
+        su = self.currentSU()
+        # for x in su:
+        #     if x >= 1:
+        #         s += 1
+        return su, sum(su)/len(su)
+
     def expStressTest(self, demandList, results, x, alg):
         percentPlrList = []
         plr1List = []
@@ -92,6 +100,10 @@ class FatTree:
             percentPlrList.append(cntPlrServ/len(self.servers))
             plr1List.append(plr1)
             plr2List.append(plr2)
+
+            # if demandList.index(dId) / len(demandList) == 0.5:
+                # print(self.test())
+                
 
             suList = None
             percent = [0.2, 0.5, 0.7]

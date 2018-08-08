@@ -28,7 +28,7 @@ def draw_plrs(plrList, algs, lineTypes):
     for i in range(len(algs)):
         plt.plot(x_data, plrList[i], lineTypes[i], label=algs[i], markevery=(len(plrList[0])//10, len(plrList[0])//5))
     plt.xlabel('percentage of peak traffics(%)')
-    plt.ylabel('packet loss rate(%)')
+    plt.ylabel('packet loss ratio(%)')
     plt.legend()
 
 def draw_bsrs(bsrList, algs, lineTypes):
@@ -52,7 +52,7 @@ def draw_sus(suList, algs, lineTypes):
     for i in range(len(algs)):
         plt.plot(x_data, suList[i], lineTypes[i], label=algs[i], markevery=(len(suList[0])//10, len(suList[0])//5))
     plt.xlabel('percentage of peak traffics(%)')
-    plt.ylabel('utility of servers(%)')
+    plt.ylabel('servers utilization(%)')
     plt.legend()
 
 def main():
@@ -85,22 +85,22 @@ def main():
     plt.figure(figsize=(4,3))
     draw_plrs(plr2List, algs, lineTypes)
     plt.tight_layout()
-    plt.savefig('results/plr_c'+str(args['c'])+'s'+str(args['s'])+'-'+str(args['x'])+'.eps')
-    plt.savefig('results/plr_c'+str(args['c'])+'s'+str(args['s'])+'-'+str(args['x'])+'.png')
+    plt.savefig('results/plr_c'+str(args['c'])+'s'+str(args['s'])+'-'+str(args['x'])+'.pdf')
+    # plt.savefig('results/plr_c'+str(args['c'])+'s'+str(args['s'])+'-'+str(args['x'])+'.png')
     plt.close()
 
     plt.figure(figsize=(4,3))
     draw_bsrs(bsrList, algs, lineTypes)
     plt.tight_layout()
-    plt.savefig('results/bsr_c'+str(args['c'])+'s'+str(args['s'])+'-'+str(args['x'])+'.eps')
-    plt.savefig('results/bsr_c'+str(args['c'])+'s'+str(args['s'])+'-'+str(args['x'])+'.png') 
+    plt.savefig('results/bsr_c'+str(args['c'])+'s'+str(args['s'])+'-'+str(args['x'])+'.pdf')
+    # plt.savefig('results/bsr_c'+str(args['c'])+'s'+str(args['s'])+'-'+str(args['x'])+'.png') 
     plt.close()
 
     plt.figure(figsize=(4,3))
     draw_sus(suList, algs, lineTypes)
     plt.tight_layout()
-    plt.savefig('results/su_c'+str(args['c'])+'s'+str(args['s'])+'-'+str(args['x'])+'.eps')
-    plt.savefig('results/su_c'+str(args['c'])+'s'+str(args['s'])+'-'+str(args['x'])+'.png')
+    plt.savefig('results/su_c'+str(args['c'])+'s'+str(args['s'])+'-'+str(args['x'])+'.pdf')
+    # plt.savefig('results/su_c'+str(args['c'])+'s'+str(args['s'])+'-'+str(args['x'])+'.png')
     plt.close()
 
 if __name__ == "__main__":
