@@ -16,6 +16,7 @@ def def_parser():
     parser.add_argument('-al', '--alpha', dest='al', help='Traffic Rate alpha(Mbps)', type=float, required=True)
     parser.add_argument('-o', '--output', dest='o', help='Output file name',type=str, default='traffic.txt')
     parser.add_argument('-s', '--seed', dest='s', help='Random seed', type=int, default=10)
+    parser.add_argument('-x', '--shiyan', dest='x', help='x-th shiyan', type=int, default=1)
     return parser
 
 # 参数解析
@@ -32,21 +33,25 @@ def generateSFC():
     vnfs = random.sample(range(vnfSum), sfcLen)
     return [sfcLen, vnfs]
 
-def calcTrafficRate(Tm, alpha):
+def calcTrafficRate(Tm, alpha, x):
     while True:
         base = pow(Tm, alpha - 1) / (1 - random.random())
         exponent = 1 / (alpha - 1)
         tr = pow(base, exponent)
         if tr / Tm < 10:
             # 实验1
-            # peak = tr*(random.random()*1+1)                     # 随机扩大1～2倍
-            # 实验2
-            # peak = tr*(random.random()*3+1)                     # 随机扩大3～4倍
-            # 实验3
-            if random.randint(0,1) == 0:
+            if x == 1:
                 peak = tr*(random.random()*1+1)                     # 随机扩大1～2倍
-            else:
-                peak = tr*(random.random()*3+1)                     # 随机扩大1～2倍
+            # 实验2
+            elif x == 2:
+                peak = tr*(random.random()*3+1)                     # 随机扩大3～4倍
+            # # 实验3
+            elif x == 3:
+                if random.randint(0,1) == 0:
+                    peak = tr*(random.random()*1+1)                     # 随机扩大1～2倍
+                else:
+                    peak = tr*(random.random()*3+1)                     # 随机扩大1～2倍
+
             return [tr, peak]
 
 def generateATraffic(args, file):
@@ -56,7 +61,7 @@ def generateATraffic(args, file):
     dst = random.randint((x+3*y)//4, y)                    # 目的    
     # src = random.randint(args['min'], args['max'])          # 源
     # dst = random.randint(args['min'], args['max'])          # 目的
-    [tr, peak] = calcTrafficRate(args['Tm'], args['al'])
+    [tr, peak] = calcTrafficRate(args['Tm'], args['al'], args['x'])
     [sfcLen, sfc] = generateSFC()
     file.write(str(src) + DELIM + str(dst) + DELIM + str(round(tr,2)) + DELIM + str(round(peak,2))+ DELIM + str(sfcLen) + DELIM + str(sfc))
 

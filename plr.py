@@ -30,6 +30,7 @@ def def_parser():
                         action='store_true')
     parser.add_argument('-s', '--seed', dest='s', help='Random seed', type=int, default=10)
     parser.add_argument('-a', '--algs', dest='a', help='used algs', type=str, default='svnf')
+    parser.add_argument('-x', '--shiyan', dest='x', help='x-th shiyan', type=int, default=1)
 
     return parser
 
@@ -103,7 +104,7 @@ def main():
     expDemandList = list(range(args['c']))
     random.shuffle(expDemandList)
     # print(expDemandList)                              # 流放大顺序 dId列表
-    [percentPlrList, plr1List, plr2List, SUList] = topo.expStressTest(expDemandList, results)
+    [percentPlrList, plr1List, plr2List, SUList] = topo.expStressTest(expDemandList, results, str(args['x']), str(args['a']))
     
     path = os.path.abspath(args['o'])
     with open(path, 'w') as handle:

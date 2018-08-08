@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys, os.path, math
 import argparse
+import pickle
 
 class FatTree:
     def __init__(self, k):
@@ -38,7 +39,15 @@ class FatTree:
         servUtility = sumUsedMips/(self.serverCapacity*cnt) if cnt != 0 else 0
         return [cnt, servUtility]
 
-    
+    def currentSU(self):
+        res = []
+        for serv in self.servers:
+            if serv < 0:
+                res.append(1)
+            else:
+                res.append(serv/self.serverCapacity)
+        return res
+
     def calcplr(self):
         # cnt, sump = 0, 0.0
         # for i in range(len(self.servers)):
@@ -62,7 +71,7 @@ class FatTree:
         return idx + self.serverNoMin
 
 
-    def expStressTest(self, demandList, results):
+    def expStressTest(self, demandList, results, x, alg):
         percentPlrList = []
         plr1List = []
         plr2List = []
@@ -83,7 +92,17 @@ class FatTree:
             percentPlrList.append(cntPlrServ/len(self.servers))
             plr1List.append(plr1)
             plr2List.append(plr2)
-        # print('plr1:', plr1List)
+
+            suList = None
+            percent = [0.2, 0.5, 0.7]
+            for i in range(len(percent)):
+                if demandList.index(dId) / len(demandList) == percent[i]:
+                    suList = self.currentSU()
+                    datPath = './pickle_cdf/'+ alg +'_su'+ str(percent[i]) + '-' + x + '.dat'
+            if suList != None:
+                f = open(datPath, 'wb')
+                pickle.dump(suList, f)
+                f.close()              
         return [percentPlrList, plr1List, plr2List, SUList]
 
 
