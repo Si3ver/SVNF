@@ -34,7 +34,7 @@ def draw_plrs(plrList, algs, lineTypes):
 
     for i in range(len(algs)):
         plt.plot(x_data, plrList[i], lineTypes[i], label=algs[i], markevery=(len(plrList[0])//10, len(plrList[0])//5))
-    plt.xlabel('traffics peak ratio(%)',fontname="Times New Roman", fontsize=8)
+    plt.xlabel('percentage of traffics burst to peak rate(%)',fontname="Times New Roman", fontsize=8)
     plt.ylabel('packet loss ratio(%)',fontname="Times New Roman", fontsize=8)
     plt.legend()
 
@@ -45,8 +45,8 @@ def draw_bsrs(bsrList, algs, lineTypes):
         bsrList[i] = list(map(lambda x:x*100, bsrList[i]))
     for i in range(len(algs)):
         plt.plot(x_data, bsrList[i], lineTypes[i], label=algs[i], markevery=(len(bsrList[0])//10, len(bsrList[0])//5))
-    plt.xlabel('traffics peak ratio(%)',fontname="Times New Roman", fontsize=8)
-    plt.ylabel('servers overload ratio(%)',fontname="Times New Roman", fontsize=8)
+    plt.xlabel('percentage of traffics burst to peak rate(%)',fontname="Times New Roman", fontsize=8)
+    plt.ylabel('overloaded servers ratio(%)',fontname="Times New Roman", fontsize=8)
     plt.legend()
 
 def draw_sus(suList, algs, lineTypes):
@@ -56,7 +56,7 @@ def draw_sus(suList, algs, lineTypes):
         suList[i] = list(map(lambda x:x*100, suList[i]))
     for i in range(len(algs)):
         plt.plot(x_data, suList[i], lineTypes[i], label=algs[i], markevery=(len(suList[0])//10, len(suList[0])//5))
-    plt.xlabel('traffics peak ratio(%)',fontname="Times New Roman", fontsize=8)
+    plt.xlabel('percentage of traffics burst to peak rate(%)',fontname="Times New Roman", fontsize=8)
     plt.ylabel('servers utilization(%)',fontname="Times New Roman", fontsize=8)
     plt.legend()
 
@@ -67,19 +67,19 @@ def main():
 
     plr2List = []
     for alg in algList:
-        path = 'pickleData/plr2List_'       + alg + '-c' + str(dNum) + 's' + str(args['s']) + '.dat'
+        path = 'pickleData/plr2List_'       + alg + '-c' + str(dNum) + 's' + str(args['s'])+'x'+str(args['x']) + '.dat'
         f = open(path, 'rb')
         plr2List.append(pickle.load(f))
         f.close()
     bsrList = []
     for alg in algList:
-        path = 'pickleData/percentPlrList_' + alg + '-c' + str(dNum) + 's' + str(args['s']) + '.dat'
+        path = 'pickleData/percentPlrList_' + alg + '-c' + str(dNum) + 's' + str(args['s'])+'x'+str(args['x']) + '.dat'
         f = open(path, 'rb')
         bsrList.append(pickle.load(f))
         f.close()
     suList = []
     for alg in algList:
-        path = 'pickleData/SUList_'         + alg + '-c' + str(dNum) + 's' + str(args['s']) + '.dat'
+        path = 'pickleData/SUList_'         + alg + '-c' + str(dNum) + 's' + str(args['s'])+'x'+str(args['x']) + '.dat'
         f = open(path, 'rb')
         suList.append(pickle.load(f))
         f.close()

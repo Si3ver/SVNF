@@ -111,10 +111,10 @@ def main():
         write_to_file(handle, plr2List)
 
     # 序列化要作图的数据
-    dat0Path = 'pickleData/percentPlrList_'+args['a']+'-c'+str(args['c'])+'s'+str(args['s'])+'.dat'
-    dat1Path = 'pickleData/plr1List_'      +args['a']+'-c'+str(args['c'])+'s'+str(args['s'])+'.dat'
-    dat2Path = 'pickleData/plr2List_'      +args['a']+'-c'+str(args['c'])+'s'+str(args['s'])+'.dat'
-    dat3Path = 'pickleData/SUList_'        +args['a']+'-c'+str(args['c'])+'s'+str(args['s'])+'.dat'
+    dat0Path = 'pickleData/percentPlrList_'+args['a']+'-c'+str(args['c'])+'s'+str(args['s'])+'x'+str(args['x'])+'.dat'
+    dat1Path = 'pickleData/plr1List_'      +args['a']+'-c'+str(args['c'])+'s'+str(args['s'])+'x'+str(args['x'])+'.dat'
+    dat2Path = 'pickleData/plr2List_'      +args['a']+'-c'+str(args['c'])+'s'+str(args['s'])+'x'+str(args['x'])+'.dat'
+    dat3Path = 'pickleData/SUList_'        +args['a']+'-c'+str(args['c'])+'s'+str(args['s'])+'x'+str(args['x'])+'.dat'
     
     f = open(dat0Path, 'wb')
     pickle.dump(percentPlrList, f)
