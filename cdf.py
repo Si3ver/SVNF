@@ -55,9 +55,9 @@ def Hopcount_CDF(y,savepath,algorithm_name):
 
     #set x(y) label
     #r'$\Delta hop counts$'
-    plt.xlabel('servers utility',fontweight='normal',fontsize=fs.XY_LABEL_SIZE,fontname="Times New Roman",color='k',horizontalalignment='center',x=0.5)#plt.xlabel('Sep 2014                                     Oct 2014',fontweight='semibold',fontsize=16,color='gray',horizontalalignment='left',x=-0.02)
+    plt.xlabel('servers utilization',fontweight='normal',fontsize=fs.XY_LABEL_SIZE,fontname="Times New Roman",color='k',horizontalalignment='center',x=0.5)#plt.xlabel('Sep 2014                                     Oct 2014',fontweight='semibold',fontsize=16,color='gray',horizontalalignment='left',x=-0.02)
     ax.xaxis.labelpad = 2.5
-    plt.ylabel('servers count/sum servers',fontweight='normal',fontsize=fs.XY_LABEL_SIZE,fontname="Times New Roman",color='k',horizontalalignment='center',y=0.5)
+    plt.ylabel('servers ratio(CDF)',fontweight='normal',fontsize=fs.XY_LABEL_SIZE,fontname="Times New Roman",color='k',horizontalalignment='center',y=0.5)
     ax.yaxis.labelpad = 2.5
     plt.title('',fontweight='normal',fontsize=fs.TITLE_SIZE,fontname="Times New Roman",color='k',horizontalalignment='center',x=0.5,y=1)
 
@@ -95,5 +95,5 @@ if __name__=="__main__":
                 content= pickle.load(f)
                 f.close()                
                 suList.append(content)
-            fOutPath = './cdf_su'+str(perce)+'-'+str(x)+'.pdf'
+            fOutPath = './cdf'+str(int(perce*100))+'pst'+str(x)+'.pdf'
             Hopcount_CDF(suList, fOutPath, algs_new)
