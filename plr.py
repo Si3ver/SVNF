@@ -96,11 +96,11 @@ def main():
     with open(args['i']) as handle:
         results = parseResults(handle)
     topo = fattree.FatTree(args['k'])
-    print('------1. before exp------')
+    # print('------1. before exp------')
     placeToTopo(results, topo)
-    topo.display()
+    # topo.display()
 
-    print('------2. start exp------')
+    # print('------2. start exp------')
     expDemandList = list(range(args['c']))
     random.shuffle(expDemandList)
     # print(expDemandList)                              # 流放大顺序 dId列表

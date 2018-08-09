@@ -39,26 +39,14 @@ def calcTrafficRate(Tm, alpha, x):
         exponent = 1 / (alpha - 1)
         tr = pow(base, exponent)
         if tr / Tm < 10:
-            # 实验1
-            if x == 1:
-                peak = tr*(random.random()*1+1)                     # 随机扩大1～2倍
-            # 实验2
-            elif x == 2:
-                peak = tr*(random.random()*3+1)                     # 随机扩大3～4倍
-            # # 实验3
-            elif x == 3:
-                if random.randint(0,1) == 0:
-                    peak = tr*(random.random()*1+1)                     # 随机扩大1～2倍
-                else:
-                    peak = tr*(random.random()*3+1)                     # 随机扩大1～2倍
-
+            peak = tr*(random.random()*x+1)                     # 随机扩大x～x+1倍
             return [tr, peak]
 
 def generateATraffic(args, file):
     global DELIM, NEWLINE
     x,y = int(args['min']), int(args['max'])
-    src = random.randint(x, (3*x+y)//4)                    # 源
-    dst = random.randint((x+3*y)//4, y)                    # 目的    
+    src = random.randint(x, (3*x+y)//4)                         # 源
+    dst = random.randint((x+3*y)//4, y)                         # 目的
     # src = random.randint(args['min'], args['max'])          # 源
     # dst = random.randint(args['min'], args['max'])          # 目的
     [tr, peak] = calcTrafficRate(args['Tm'], args['al'], args['x'])

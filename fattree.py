@@ -48,6 +48,24 @@ class FatTree:
                 res.append(1.0 - serv/self.serverCapacity)
         return res
 
+    def currentPlr(self):
+        res = []
+        for serv in self.servers:
+            if serv < 0:
+                res.append( (0 - serv) / (self.serverCapacity - serv))
+            else:
+                res.append( 0 )
+        return res
+
+    def currentSor(self):
+        res = []
+        for serv in self.servers:
+            if serv < 0:
+                res.append(1)
+            else:
+                res.append(0)
+        return res
+
     def calcplr(self):
         # cnt, sump = 0, 0.0
         # for i in range(len(self.servers)):
@@ -70,6 +88,37 @@ class FatTree:
     def transfertoNo(self, idx):
         return idx + self.serverNoMin
 
+    def calcAvgPlr(self):
+        # plrList = self.currentPlr()
+        # return sum(plrList)/len(plrList)
+        sumpl, cnt = 0, 0
+        for serv in self.servers:
+            if serv < 0:
+                sumpl -= serv
+                cnt += 1
+        return sumpl / (cnt*self.serverCapacity)
+    
+    def calcAvgSor(self):
+        # sorList = self.currentSor()
+        # return sum(sorList)/len(sorList)
+        cnt = 0
+        for serv in self.servers:
+            if serv < 0:
+                cnt += 1
+        return cnt/self.cntServers
+    
+    def calcAvgSu(self):
+        # suList = self.currentSU()
+        # return sum(suList)/len(suList)
+        usedMips, cnt = 0,0
+        for serv in self.servers:
+            if serv < 0:
+                usedMips += self.serverCapacity
+                cnt += 1
+            elif serv < self.serverCapacity:
+                usedMips += (self.serverCapacity - serv)
+                cnt += 1
+        return usedMips / (cnt * self.serverCapacity)
 
     def test(self):
         # print(self.servers)
@@ -104,17 +153,33 @@ class FatTree:
             # if demandList.index(dId) / len(demandList) == 0.5:
                 # print(self.test())
                 
-
             suList = None
-            percent = [0.2, 0.5, 0.7]
+            percent = [0.2]
             for i in range(len(percent)):
                 if demandList.index(dId) / len(demandList) == percent[i]:
                     suList = self.currentSU()
                     datPath = './pickle_cdf/'+ alg +'_su'+ str(percent[i]) + '-' + x + '.dat'
+                    plrList = self.currentPlr()
+                    datPathPlr = './pickle_cdf/'+ alg +'_plr'+ str(percent[i]) + '-' + x + '.dat'
+                    sorList = self.currentSor()
+                    dataPathSor = './pickle_cdf/'+ alg +'_sor'+ str(percent[i]) + '-' + x + '.dat'
             if suList != None:
                 f = open(datPath, 'wb')
                 pickle.dump(suList, f)
-                f.close()              
+                f.close() 
+                f2 = open(datPathPlr, 'wb')
+                pickle.dump(plrList, f2)
+                f2.close()  
+                f3 = open(dataPathSor, 'wb')
+                pickle.dump(sorList, f3)
+                f3.close()
+            
+            # x变化时。输出参数变化
+            if demandList.index(dId) / len(demandList) == 0.2:
+                # print('@@@@@ plr', x, self.calcAvgPlr())
+                print('%.3f, ' % self.calcAvgSor(), end=' ')
+                # print('@@@@@ su ', x, self.calcAvgSu())
+        print()
         return [percentPlrList, plr1List, plr2List, SUList]
 
 

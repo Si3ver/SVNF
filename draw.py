@@ -1,9 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# 画压力测试，的几张average的图
 import sys, pickle, argparse
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+import os.path
+import csv
+import time
+import figure_style as fs
 
 # 定义命令行参数格式
 def def_parser():
@@ -19,7 +27,6 @@ def parse_args(parser):
     return opts
 
 def draw_plrs(plrList, algs, lineTypes):
-    # plt.subplot(1,3,1)
     x_data = list(range(len(plrList[0])))
     x_data = list(map(lambda x:x*100/len(plrList[0]), x_data))
     for i in range(len(algs)):
@@ -27,32 +34,30 @@ def draw_plrs(plrList, algs, lineTypes):
 
     for i in range(len(algs)):
         plt.plot(x_data, plrList[i], lineTypes[i], label=algs[i], markevery=(len(plrList[0])//10, len(plrList[0])//5))
-    plt.xlabel('traffics peak ratio(%)')
-    plt.ylabel('packet loss ratio(%)')
+    plt.xlabel('traffics peak ratio(%)',fontname="Times New Roman", fontsize=8)
+    plt.ylabel('packet loss ratio(%)',fontname="Times New Roman", fontsize=8)
     plt.legend()
 
 def draw_bsrs(bsrList, algs, lineTypes):
-    # plt.subplot(1,3,2)
     x_data = list(range(len(bsrList[0])))
     x_data = list(map(lambda x:x*100/len(bsrList[0]), x_data))
     for i in range(len(algs)):
         bsrList[i] = list(map(lambda x:x*100, bsrList[i]))
     for i in range(len(algs)):
         plt.plot(x_data, bsrList[i], lineTypes[i], label=algs[i], markevery=(len(bsrList[0])//10, len(bsrList[0])//5))
-    plt.xlabel('traffics peak ratio(%)')
-    plt.ylabel('servers overload ratio(%)')
+    plt.xlabel('traffics peak ratio(%)',fontname="Times New Roman", fontsize=8)
+    plt.ylabel('servers overload ratio(%)',fontname="Times New Roman", fontsize=8)
     plt.legend()
 
 def draw_sus(suList, algs, lineTypes):
-    # plt.subplot(1,3,3)
     x_data = list(range(len(suList[0])))
     x_data = list(map(lambda x:x*100/len(suList[0]), x_data))
     for i in range(len(algs)):
         suList[i] = list(map(lambda x:x*100, suList[i]))
     for i in range(len(algs)):
         plt.plot(x_data, suList[i], lineTypes[i], label=algs[i], markevery=(len(suList[0])//10, len(suList[0])//5))
-    plt.xlabel('traffics peak ratio(%)')
-    plt.ylabel('servers utilization(%)')
+    plt.xlabel('traffics peak ratio(%)',fontname="Times New Roman", fontsize=8)
+    plt.ylabel('servers utilization(%)',fontname="Times New Roman", fontsize=8)
     plt.legend()
 
 def main():
@@ -85,25 +90,19 @@ def main():
     plt.figure(figsize=(4,3))
     draw_plrs(plr2List, algs, lineTypes)
     plt.tight_layout()
-    # plt.savefig('results/plr_c'+str(args['c'])+'s'+str(args['s'])+'-'+str(args['x'])+'.pdf')
     plt.savefig('results/plr'+str(args['x'])+'.pdf')
-    # plt.savefig('results/plr_c'+str(args['c'])+'s'+str(args['s'])+'-'+str(args['x'])+'.png')
     plt.close()
 
     plt.figure(figsize=(4,3))
     draw_bsrs(bsrList, algs, lineTypes)
     plt.tight_layout()
-    # plt.savefig('results/bsr_c'+str(args['c'])+'s'+str(args['s'])+'-'+str(args['x'])+'.pdf')
     plt.savefig('results/sor'+str(args['x'])+'.pdf')
-    # plt.savefig('results/bsr_c'+str(args['c'])+'s'+str(args['s'])+'-'+str(args['x'])+'.png') 
     plt.close()
 
     plt.figure(figsize=(4,3))
     draw_sus(suList, algs, lineTypes)
     plt.tight_layout()
-    # plt.savefig('results/su_c'+str(args['c'])+'s'+str(args['s'])+'-'+str(args['x'])+'.pdf')
     plt.savefig('results/su'+str(args['x'])+'.pdf')
-    # plt.savefig('results/su_c'+str(args['c'])+'s'+str(args['s'])+'-'+str(args['x'])+'.png')
     plt.close()
 
 if __name__ == "__main__":
