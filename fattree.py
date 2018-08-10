@@ -75,29 +75,51 @@ class FatTree:
         # if cnt == 0:
         #     return [0, 0, 0]
         # return [cnt, sump/(self.serverCapacity * cnt), sump/(self.serverCapacity * self.cntServers)]
-        cnt = 0
-        sumPlr = 0.0
-        for _servNo, plr in self.plrServerList.items():
-            sumPlr += plr
-            cnt += 1
-        if cnt == 0:
-            return [0, 0, 0]
-        return [cnt, sumPlr/cnt, sumPlr/self.cntServers]
+        # cnt = 0
+        # sumPlr = 0.0
+        # for _servNo, plr in self.plrServerList.items():
+        #     sumPlr += plr
+        #     cnt += 1
+        # if cnt == 0:
+        #     return [0, 0, 0]
+        return [0, 0, self.calcAvgPlrNew()]
 
 
     def transfertoNo(self, idx):
         return idx + self.serverNoMin
 
-    def calcAvgPlr(self):
+    # def calcAvgPlr(self):
+    #     # plrList = self.currentPlr()
+    #     # return sum(plrList)/len(plrList)
+    #     sumpl, cnt = 0, 0
+    #     for serv in self.servers:
+    #         if serv < 0:
+    #             sumpl -= serv
+    #             cnt += 1
+    #     sumProcessed = 0
+    #     for serv in self.servers:
+    #         if serv > 0:
+    #             sumProcessed += self.serverCapacity - serv
+    #         else:
+    #             sumProcessed -= serv
+    #     return sumpl / sumProcessed
+    
+    def calcAvgPlrNew(self):
         # plrList = self.currentPlr()
         # return sum(plrList)/len(plrList)
-        sumpl, cnt = 0, 0
+        sumAcc, sumProc, _cnt = 0, 0, 0
         for serv in self.servers:
             if serv < 0:
-                sumpl -= serv
-                cnt += 1
-        return sumpl / (cnt*self.serverCapacity)
-    
+                sumAcc -= serv
+                sumAcc += self.serverCapacity
+                sumProc += self.serverCapacity
+            if serv >= 0:
+                sumAcc += self.serverCapacity - serv
+                sumProc += self.serverCapacity - serv
+        # print(sumAcc, sumProc)
+        return 1- (sumProc / sumAcc)
+
+
     def calcAvgSor(self):
         # sorList = self.currentSor()
         # return sum(sorList)/len(sorList)
@@ -133,7 +155,6 @@ class FatTree:
         plr1List = []
         plr2List = []
         SUList = []
-
         for dId in demandList:
             # print(dId, len(results))
             result = results[dId]
@@ -141,14 +162,21 @@ class FatTree:
             self.expDemand(result)
             # self.display_expServs()
             # self.display()
-            [cntPlrServ, plr1, plr2] = self.calcplr()
+            # [_cntPlrServ, plr1, plr2] = self.calcplr()
             # print(cntPlrServ, plr1, plr2)
             # print('sum plrServers=%d, plr1=%.3f%%, plr2=%.3f%%' % (cntPlrServ, plr1*100.0, plr2*100.0))
-            [_usedServersCnt, SU] = self.calcSU()
-            SUList.append(SU)
-            percentPlrList.append(cntPlrServ/len(self.servers))
-            plr1List.append(plr1)
-            plr2List.append(plr2)
+            # [_usedServersCnt, SU] = self.calcSU()
+            # su
+            SUList.append(self.calcAvgSu())
+            # sor
+            percentPlrList.append(self.calcAvgSor())
+            #plr
+            plr1List.append(0)
+            plr2List.append(self.calcAvgPlrNew())
+            # if dId == demandList[-1]:
+            #     print(len(SUList))
+            #     print(len(percentPlrList))
+            #     print(len(plr2List))
 
             # if demandList.index(dId) / len(demandList) == 0.5:
                 # print(self.test())
@@ -176,10 +204,15 @@ class FatTree:
             
             # x变化时。输出参数变化
             if demandList.index(dId) / len(demandList) == 0.2:
-                # print('@@@@@ plr', x, self.calcAvgPlr())
-                print('%.3f, ' % self.calcAvgSor(), end=' ')
-                # print('@@@@@ su ', x, self.calcAvgSu())
+                print('@@@@@ plr=%.3f' % self.calcAvgPlrNew())
+                # print(self.currentPlr())
+                print('@@@@@ sor=%.3f' % self.calcAvgSor())
+                # print('%.3f,' % self.calcAvgSor(), end=' ')
+                print('@@@@@ su =%.3f' % self.calcAvgSu())
         print()
+
+        # print('plr %.3f'%self.calcAvgPlrNew())
+        # print(self.servers)
         return [percentPlrList, plr1List, plr2List, SUList]
 
 
@@ -192,11 +225,11 @@ class FatTree:
 
 
     def expDemand(self, result):
-        [_dId, _src, _dst, _exp, mipsList, servList] = result
+        [_dId, _src, _dst, exp, mipsList, servList] = result
         for i in range(len(servList)):
             mips = mipsList[i]
             servNo = servList[i]
-            self.servers[servNo - self.serverNoMin] -= mips
+            self.servers[servNo - self.serverNoMin] -= mips*(exp-1)
             
             # 检测是否丢包
             if self.servers[servNo - self.serverNoMin] < 0:
@@ -215,6 +248,12 @@ class FatTree:
             return True
         return False
 
+    # 
+    def ifCanDeployCLBP(self, mips, exp, no):
+        leftMips = self.servers[no - self.serverNoMin]
+        if leftMips > mips:
+            return True
+        return False
 
     # 所有流量都扩张，还能放下
     def ifCanCompleteDeploy(self, mips, exp, no):

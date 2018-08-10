@@ -71,6 +71,8 @@ def main():
         f = open(path, 'rb')
         plr2List.append(pickle.load(f))
         f.close()
+    # for i in range(3):
+    #     print(len(plr2List[i]), plr2List[i][149])
     bsrList = []
     for alg in algList:
         path = 'pickleData/percentPlrList_' + alg + '-c' + str(dNum) + 's' + str(args['s'])+'x'+str(args['x']) + '.dat'
