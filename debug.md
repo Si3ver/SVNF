@@ -171,3 +171,35 @@ python3 clbp2.py -k 10 -i shiyan1/traffic-c100s20.txt -o shiyan1/result_clbp-c10
 python3 resultAnalysis.py -c 500 -k 10 -i shiyan1/result_clbp-c100s20.txt -o shiyan1/analysis_clbp-c100s20.txt -a clbp -x 6
 python3 plr.py -c 500 -k 10 -i shiyan1/result_clbp-c100s20.txt -s 30 -o shiyan1/plr_clbp-c100s20.txt -a clbp -x 6
 ```
+
+结果详见我的论文:
+
+W.  Zhou,  Y.  Yang,  and  M.  Xu,  “Accommodating  dynamic  trafficimmediately:  a  VNF  placement  approach,”  in2018 IEEE 37th In-ternational Performance Computing and Communications Conference(IPCCC) (IPCCC 2018), Orlando, USA, Nov. 2018.
+
+BibTex
+
+@INPROCEEDINGS{Zhou,
+AUTHOR="Weilin Zhou and Yuan Yang and Mingwei Xu",
+TITLE="Accommodating Dynamic Traffic Immediately: a {VNF} Placement Approach",
+BOOKTITLE="2018 IEEE 37th International Performance Computing and Communications
+Conference (IPCCC) (IPCCC 2018)",
+ADDRESS="Orlando, USA",
+DAYS=17,
+MONTH=nov,
+YEAR=2018,
+KEYWORDS="NFV; Dynamic Traffic; VNF placement; network scalability; heuristic
+algorithm; heuristic algorithm",
+ABSTRACT="Network Function Virtualization (NFV) offers a new way to design, deploy
+and manage network services as it provides operator with agility and
+flexibility of network service deployment. While NFV orchestration becomes
+quite complicated when consider dynamic traffic variability in real network
+scenario. To fit in the situation of traffic rate change and add
+scalability to NFV deployment, we raise a scalable virtual network function
+(VNF) placement algorithm. In this paper, we first quantify scalability and
+identify the factors that undermine scalability. Furthermore, for improve
+network scalability and reduce the flow path length, we put forward a
+heuristic algorithm named SVNFP. We evaluate our approach consider packet
+loss rate, bad server rate, server utility, flow path length and traffic
+accept rate. The simulation shows that our aproach effectively improve
+network scalability and reduce flow path length."
+}

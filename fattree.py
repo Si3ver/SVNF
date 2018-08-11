@@ -209,9 +209,12 @@ class FatTree:
                 print('@@@@@ sor=%.3f' % self.calcAvgSor())
                 # print('%.3f,' % self.calcAvgSor(), end=' ')
                 print('@@@@@ su =%.3f' % self.calcAvgSu())
+            # if demandList.index(dId) == 149:
+                # print('%d, plr %.3f'%(dId, self.calcAvgPlrNew()))
+                print(len(demandList))
         print()
 
-        # print('plr %.3f'%self.calcAvgPlrNew())
+        
         # print(self.servers)
         return [percentPlrList, plr1List, plr2List, SUList]
 
