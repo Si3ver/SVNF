@@ -172,7 +172,7 @@ python3 resultAnalysis.py -c 500 -k 10 -i shiyan1/result_clbp-c100s20.txt -o shi
 python3 plr.py -c 500 -k 10 -i shiyan1/result_clbp-c100s20.txt -s 30 -o shiyan1/plr_clbp-c100s20.txt -a clbp -x 6
 ```
 
-结果详见我的论文:
+结果详见我的论文（已投稿IPCCC，等待评审中...）:
 
 W.  Zhou,  Y.  Yang,  and  M.  Xu,  “Accommodating  dynamic  trafficimmediately:  a  VNF  placement  approach,”  in2018 IEEE 37th In-ternational Performance Computing and Communications Conference(IPCCC) (IPCCC 2018), Orlando, USA, Nov. 2018.
 
