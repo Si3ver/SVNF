@@ -1,4 +1,6 @@
-# Scalable Virtual Network Function Placement(sVNFP)
+# NFVSimu 
+
+VNF放置算法运行和压力测试系统
 
 ## 说明
 
@@ -8,7 +10,7 @@
 
 ## 依赖库
 
-请安装python3、argparse、numpy、matplotlib等依赖库，推荐用pip3安装，并安装anaconda工具。
+请安装python3、argparse、numpy、matplotlib等依赖库，推荐直接安装anaconda、然后用pip3安装numpy。
 
 ## 使用说明
 
@@ -104,4 +106,4 @@ python3 draw.py
 
 ## 实验
 
-[点我看实验结果](debug.md)
+[点我看实验结果](src/simu.md)
