@@ -40,6 +40,7 @@ python3 draw.py -c 100 -s 30 -x 0
 ## 实验1   (exp: 1~2)
 
 ```shell
+# 路径需要按照实验0修改！
 # --- k=10 c=500 s=30 x=1---
 # 生成流量
 python3 traffic.py -c 500 -k 10 -Tm 10 -al 2.1 -s 20 -o shiyan1/traffic-c100s20.txt -x 1
@@ -74,6 +75,7 @@ python3 draw.py -c 500 -s 30 -x 1
 ## 实验2 (exp: 2~3)
 
 ```shell
+# 路径需要按照实验0修改！
 # --- k=10 c=500 s=30 x=2---
 # 生成流量
 python3 traffic.py -c 500 -k 10 -Tm 10 -al 2.1 -s 20 -o shiyan1/traffic-c100s20.txt -x 2
@@ -96,6 +98,7 @@ python3 draw.py -c 500 -s 30 -x 2
 ## 实验3 (exp=3~4)
 
 ```console
+# 路径需要按照实验0修改！
 # --- k=10 c=500 s=30 x=3---
 python3 traffic.py -c 500 -k 10 -Tm 10 -al 2.1 -s 20 -o shiyan1/traffic-c100s20.txt -x 3
 python3 mvsh.py -k 10 -i shiyan1/traffic-c100s20.txt -o shiyan1/result_mvsh-c100s20.txt -n
@@ -134,6 +137,7 @@ run 100 python3 plr.py -c 500 -k 10 -i shiyan1/result_clbp-c100s20.txt -s 30 -o 
 [cdf](cdf_su0.7-2.pdf)
 
 ```shell
+# 路径需要按照实验0修改！
 # -------x = 4
 python3 traffic.py -c 500 -k 10 -Tm 10 -al 2.1 -s 20 -o shiyan1/traffic-c100s20.txt -x 4
 
@@ -179,34 +183,4 @@ python3 resultAnalysis.py -c 500 -k 10 -i shiyan1/result_clbp-c100s20.txt -o shi
 python3 plr.py -c 500 -k 10 -i shiyan1/result_clbp-c100s20.txt -s 30 -o shiyan1/plr_clbp-c100s20.txt -a clbp -x 6
 ```
 
-结果详见我的论文（已投稿IPCCC，等待评审中...）:
-
-W.  Zhou,  Y.  Yang,  and  M.  Xu,  “Accommodating  dynamic  trafficimmediately:  a  VNF  placement  approach,”  in2018 IEEE 37th In-ternational Performance Computing and Communications Conference(IPCCC) (IPCCC 2018), Orlando, USA, Nov. 2018.
-
-BibTex
-
-@INPROCEEDINGS{Zhou,
-AUTHOR="Weilin Zhou and Yuan Yang and Mingwei Xu",
-TITLE="Accommodating Dynamic Traffic Immediately: a {VNF} Placement Approach",
-BOOKTITLE="2018 IEEE 37th International Performance Computing and Communications
-Conference (IPCCC) (IPCCC 2018)",
-ADDRESS="Orlando, USA",
-DAYS=17,
-MONTH=nov,
-YEAR=2018,
-KEYWORDS="NFV; Dynamic Traffic; VNF placement; network scalability; heuristic
-algorithm; heuristic algorithm",
-ABSTRACT="Network Function Virtualization (NFV) offers a new way to design, deploy
-and manage network services as it provides operator with agility and
-flexibility of network service deployment. While NFV orchestration becomes
-quite complicated when consider dynamic traffic variability in real network
-scenario. To fit in the situation of traffic rate change and add
-scalability to NFV deployment, we raise a scalable virtual network function
-(VNF) placement algorithm. In this paper, we first quantify scalability and
-identify the factors that undermine scalability. Furthermore, for improve
-network scalability and reduce the flow path length, we put forward a
-heuristic algorithm named SVNFP. We evaluate our approach consider packet
-loss rate, bad server rate, server utility, flow path length and traffic
-accept rate. The simulation shows that our aproach effectively improve
-network scalability and reduce flow path length."
-}
+结果详见我的论文（ICC已录用）: W.  Zhou,  Y.  Yang,  and  M.  Xu, Hao Chen,  “Accommodating  dynamic  trafficimmediately:  a  VNF  placement  approach,”.
