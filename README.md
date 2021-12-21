@@ -2,6 +2,8 @@
 
 VNF放置算法运行和压力测试系统
 
+论文地址： [W. Zhou, Y. Yang, and M. Xu, Hao Chen, “Accommodating dynamic trafficimmediately: a VNF placement approach](https://ieeexplore.ieee.org/abstract/document/8761554)
+
 ## 说明
 
 转载或引用请联系本项目作者：周伟林 izhouwl@163.com
